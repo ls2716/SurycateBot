@@ -1,0 +1,9 @@
+LICENSE
+README.md
+pyproject.toml
+src/surycate_bot_ls2716/__init__.py
+src/surycate_bot_ls2716/example.py
+src/surycate_bot_ls2716.egg-info/PKG-INFO
+src/surycate_bot_ls2716.egg-info/SOURCES.txt
+src/surycate_bot_ls2716.egg-info/dependency_links.txt
+src/surycate_bot_ls2716.egg-info/top_level.txt
