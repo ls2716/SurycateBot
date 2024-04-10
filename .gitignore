@@ -1,0 +1,7 @@
+# Ignore pycache
+__pycache__/
+*.pyc
+
+# Ignore old folders
+old/
+
