@@ -16,9 +16,9 @@ def enqueue_output(out, queue):
 class Shell(object):
     """Shell object"""
 
-    def __init__(self, command_time=0.5) -> None:
+    def __init__(self, command_time=0.5, sh=['bash']) -> None:
         # Open a powershell process
-        self.p = Popen(['powershell'], stdin=PIPE,
+        self.p = Popen(sh, stdin=PIPE,
                        stdout=PIPE, stderr=PIPE, shell=True)
         # Define stdout queue and stderr queue and start the threads
         self.q_stdout = Queue()
@@ -34,6 +34,14 @@ class Shell(object):
         self.command_time = command_time
         time.sleep(self.command_time)
         _ = self.get_stdout()
+        _ = self.get_stderr()
+        if sh[0] == 'bash':
+            self.add_aliases()
+
+    def add_aliases(self) -> None:
+        """Expand aliases."""
+        self.send_command('shopt -s expand_aliases')
+        self.send_command('alias ll="ls -alF"')
 
     def send_command(self, command) -> None:
         """Send a command to the shell."""

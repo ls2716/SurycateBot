@@ -1,104 +1,116 @@
 """Implement actions for the bot."""
-from typing import List, Tuple
+from typing import List, Tuple, Dict, Callable, NewType
 
 import time
 from datetime import datetime
-import subprocess
+import shlex  # For splitting the command into a list of arguments
 
 # Import the logging module
 import surycate_bot_ls2716.utils as utils
+import surycate_bot_ls2716.shell as shell_lib
 
 # Set the logger
 logger = utils.get_logger(__name__)
 
 
-def execute_command(state, arguments) -> str:
-    """Execute a command."""
-    # Get the command
-    command = arguments
-    # Execute the command
-    return_value = subprocess.run(command, shell=True, capture_output=True)
-    # Get the output
-    output = return_value.stdout.decode("utf-8")
-    # Get the error
-    error = return_value.stderr.decode("utf-8")
-    # Get the command status
-    status = return_value.returncode
-    # If the command was successful
-    if status == 0:
-        observation = f"Command: {command}\nOutput: {output}"
-    else:
-        observation = f"Command: {command}\nError: {error}"
-    # Return the observation
-    return observation, False
-
-
 def execute_shell_command(state, arguments) -> str:
-    """Execute a shell command."""
+    """Execute a shell command using the shell in the state.
+    """
     # Get the command
     command = " ".join(arguments)
     # Get the shell object
     shell = state['shell']
+    if type(shell) is not shell_lib.Shell:
+        raise TypeError("Shell object in the state is not of type Shell.")
 
     # Log the command
     logger.debug(f"Shell command: {command}")
-
     # Execute the command
     shell.send_command(command)
     # Get the output
     output = shell.get_stdout()
     # Get the error
     error = shell.get_stderr()
-    # If the command was successful
-    if output == "":
-        output = "None"
+    logger.debug(f"Shell output: {output}")
+    logger.debug(f"Shell error: {error}")
+    # If there is not output, raise an error
+    if output == "" and error == "":
+        raise ValueError(f"Command '{command}' resulted in no output.")
+    # If there is no error, create an observation that the command was successful
+    # and return the output.
+    # Else, create an observation that the command resulted in an error
+    # and return the error.
     if error == "":
         observation = f"Command '{command}'"\
             + f" was executed successfully.\nOUTPUT:\n```{output}```"
     else:
         observation = f"Command '{command}'"\
             + f" resulted in error.\nERROR:\n```{error}```"
-    # Return the observation
+    # Return the observation and the task_done flag set to False
+    # Shell commands never end the task
     return observation, False
 
 
-def get_time(state, arguments) -> str:
-    """Get the current time."""
+def get_time(state: Dict, arguments: List[str]) -> Tuple[str, bool]:
+    """Get the current time action."""
     # Get the current time
     current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    # Return the time
+    # Return the time and the task_done flag set to False
     return "Current time is: " + current_time, False
 
 
-actions = {
-    "os_cmd": execute_command,
+def task_done(state: Dict, arguments: List[str]) -> Tuple[str, bool]:
+    """Task is done.
+    Return the observation that the task is done and a boolean True indicating
+    that the task is done.
+    """
+    return "Task is done.", True
+
+
+# Specify the available actions in the action_set dictionary
+DEFAULT_ACTION_SET = {
     "get_time": get_time,
-    "exit": lambda state, arguments: ("Task is done.", True),
+    "exit": task_done,
     "cmd": execute_shell_command
 }
 
 
-class Actions(object):
-    """Actions class"""
+class ActionExecutor(object):
+    """ActionExecutor class.
 
-    def __init__(self) -> None:
-        self.actions = []
+    This class is responsible for executing actions.
+    It is set up with the possible actions in the form of a dictionary.
 
-    def execute(self, action: str, state: dict) -> Tuple[str, bool]:
+    Given an action string "command arg1 arg2 arg3 ...", the
+    ActionExecutor will execute the command with the arguments.
+
+    The ActionExecutor will return the observation and a boolean indicating
+    whether the task is done.
+    """
+
+    def __init__(self, action_set: Dict[str, Callable]) -> None:
+        # Set the actions available to the ActionExecutor
+        self.action_set = action_set
+
+    def execute(self, action: str, state: Dict) -> Tuple[str, bool]:
         """Execute the action."""
         # Log the action
         logger.info(f"Executing action {action}")
         # Split the action into the command and the arguments
         # The action format follows the pattern
-        # COMMAND ARG1 ARG2 ARG3 ...
-        action_parts = action.split(" ")
+        # command arg1 arg2 arg3 ...
+        # will respect quotation marks and get keep them
+        action_parts: List[str] = shlex.split(action, posix=True)
         # Get the command
-        command = action_parts[0]
-        # Get the arguments
-        if len(action_parts) > 1:
+        command: str = action_parts[0]
+        # Check that the action is available
+        if command not in self.action_set:
+            raise ValueError(f"Action '{command}' is not available.")
+        # Get the arguments as strings
+        if len(action_parts) > 1:  # If there are arguments
             arguments = action_parts[1:]
-        else:
-            arguments = []
+        else:  # If there are no arguments
+            arguments = []  # Set the arguments to an empty list
         # Execute the command
-        observation, task_done = actions[command](state, arguments)
+        observation, task_done = self.action_set[command](state, arguments)
         return observation, task_done

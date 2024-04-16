@@ -70,10 +70,10 @@ if __name__ == "__main__":
     llm = get_llm()
     # Set up the memory
     mem = memory.KeyValueMemory(
-        '../src/surycate_bot_ls2716/key_value_experiences')
+        'key_value_experiences')
     # Set a task
-    task = tasks.Task("Create a folder named 'lolapaloza' in the current directory",
-                      "You are in the current directory and working on a project to create a website.")
+    task = tasks.Task("What is the current time?",
+                      "No context available for this task.")
     # Set up actions
     actions = actions.Actions()
 
