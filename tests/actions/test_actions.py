@@ -63,7 +63,7 @@ def test_powershell_error(state: Dict, powershell: shell.Shell, action_executor:
 
 @pytest.fixture(scope="module")
 def bash():
-    shell_obj = shell.Shell(sh=['bash'])
+    shell_obj = shell.Shell(command_time=0.7, sh=['bash'])
     yield shell_obj
     shell_obj.close()
 
