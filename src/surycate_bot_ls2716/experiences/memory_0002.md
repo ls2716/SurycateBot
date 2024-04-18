@@ -5,7 +5,7 @@ Memories:
 - I can use mkdir command to create a folder.
 
 START:
-Thought: I need to create a folder named 'Code'.
+Thought: I need to create a folder named "Code".
 Action: cmd mkdir Code
-Observation: The folder 'Code' was created.
+Observation: The folder "Code" was created.
 EXIT

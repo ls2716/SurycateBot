@@ -34,36 +34,8 @@ def test_time(state: Dict, action_executor: actions.ActionExecutor):
 
 
 @pytest.fixture(scope="module")
-def powershell():
-    shell_obj = shell.Shell(sh=['powershell'])
-    # _ = shell_obj.get_stdout()
-    # print(_)
-    yield shell_obj
-    shell_obj.close()
-
-
-def test_powershell_command(state: Dict, powershell: shell.Shell, action_executor: actions.ActionExecutor):
-    action = 'cmd ls'
-    state['shell'] = powershell
-    observation, task_done = action_executor.execute(action, state)
-    # assert that the observation is correct and contains Name"
-    assert observation.find("Name") != -1
-    # assert task_done is False
-
-
-def test_powershell_error(state: Dict, powershell: shell.Shell, action_executor: actions.ActionExecutor):
-    action = 'cmd ll'
-    state['shell'] = powershell
-    observation, task_done = action_executor.execute(action, state)
-    # assert that the observation is not correct
-    assert observation.find("ll") != -1
-    assert observation.find("ObjectNotFound") != -1
-    # assert task_done is False
-
-
-@pytest.fixture(scope="module")
 def bash():
-    shell_obj = shell.Shell(command_time=0.7, sh=['bash'])
+    shell_obj = shell.Shell(command_timeout=1, sh=['bash'])
     yield shell_obj
     shell_obj.close()
 

@@ -1,6 +1,7 @@
 """This script defines the prompt for the bot."""
 # Import the prompt template from langchain
 from langchain.prompts.prompt import PromptTemplate
+from typing import List
 
 
 # Import the logging module
@@ -54,12 +55,12 @@ default_prompt = PromptTemplate(
 )
 
 
-def format_memories(memories: list) -> str:
+def format_memories(memories: List) -> str:
     """Format the memories."""
     return "\n".join('- ' + memory.page_content for memory in memories)
 
 
-def format_similar_tasks(similar_tasks: list) -> str:
+def format_similar_tasks(similar_tasks: List) -> str:
     """Format the similar tasks."""
     return "\n----------------\n".join(similar_task.page_content for similar_task in similar_tasks)
 
@@ -81,7 +82,7 @@ if __name__ == "__main__":
     mems = memory_src.get_memories(
         "Who is the president of the United States?")
 
-    current_task = "Create a directory named test."
+    current_task = 'Create a directory named "test".'
 
     task_memory = memory.Memory("experiences")
     tasks = task_memory.get_memories(current_task)

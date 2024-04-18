@@ -1,7 +1,6 @@
 """Implement actions for the bot."""
-from typing import List, Tuple, Dict, Callable, NewType
+from typing import List, Tuple, Dict, Callable
 
-import time
 from datetime import datetime
 import shlex  # For splitting the command into a list of arguments
 
@@ -26,26 +25,23 @@ def execute_shell_command(state, arguments) -> str:
     # Log the command
     logger.debug(f"Shell command: {command}")
     # Execute the command
-    shell.send_command(command)
-    # Get the output
-    output = shell.get_stdout()
-    # Get the error
-    error = shell.get_stderr()
+    output, error, status_code = shell.execute_command(command)
+
+    # Log the output, error, and status code
     logger.debug(f"Shell output: {output}")
     logger.debug(f"Shell error: {error}")
-    # If there is not output, raise an error
-    if output == "" and error == "":
-        raise ValueError(f"Command '{command}' resulted in no output.")
-    # If there is no error, create an observation that the command was successful
+    logger.debug(f"Shell status code: {status_code}")
+
+    # If the command is successful, create an observation stating command was successful
     # and return the output.
     # Else, create an observation that the command resulted in an error
     # and return the error.
-    if error == "":
-        observation = f"Command '{command}'"\
-            + f" was executed successfully.\nOUTPUT:\n```{output}```"
+    if status_code == 0:
+        observation = f'Command "{command}"'\
+            + f' was executed successfully.\nOUTPUT:\n```\n{output}```'
     else:
-        observation = f"Command '{command}'"\
-            + f" resulted in error.\nERROR:\n```{error}```"
+        observation = f'Command "{command}"'\
+            + f' resulted in error.\nERROR:\n```\n{error}```'
     # Return the observation and the task_done flag set to False
     # Shell commands never end the task
     return observation, False
@@ -114,3 +110,20 @@ class ActionExecutor(object):
         # Execute the command
         observation, task_done = self.action_set[command](state, arguments)
         return observation, task_done
+
+
+if __name__ == "__main__":
+    # Initialise the shell
+    shell = shell_lib.Shell(sh=['bash'])
+    # Set the state
+    state = {
+        "shell": shell
+    }
+    # Set up the ActionExecutor
+    actions = ActionExecutor(DEFAULT_ACTION_SET)
+    # Execute the command
+    action = "cmd ls"
+    observation, task_done = actions.execute(action, state)
+    print(observation)
+    # Close the shell
+    shell.close()

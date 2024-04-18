@@ -71,10 +71,10 @@ if __name__ == "__main__":
     # Set up the memory
     mem = memory.KeyValueMemory('key_value_experiences')
     # Set a task
-    task = tasks.Task("Create a folder named 'test' in the current directory",
-                      "You are in the current directory and working on a project to create a website.")
+    task = tasks.Task('Create a folder named "test" in the current directory',
+                      'You are in the current directory and working on a project to create a website.')
     # Set up actions
-    actions = actions.Actions()
+    actions = actions.ActionExecutor(action_set=actions.DEFAULT_ACTION_SET)
 
     # set up shell
     shell = Shell()

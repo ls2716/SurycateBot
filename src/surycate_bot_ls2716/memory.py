@@ -1,16 +1,32 @@
-"""Module which serves as a memory for the bot."""
+"""Implementation of memory objects.
 
-# Import the utils
-import surycate_bot_ls2716.utils as utils
+This file specifies two memory classes: Memory and KeyValueMemory.
+
+Memory class is used to store memories in a folder and perform similarity search on them.
+The Memory searches by the whole content of the document.
+
+KeyValueMemory class is used to store key-value pairs in a folder
+and perform similarity search on the keys. 
+This is implemented so that the content of the document does not affect the similarity search.
+For example, if we want to search similar tasks as the current task, we only care about
+the task and optionally the context but not the whole execution experience which is not 
+relevant for the similarity search.
+
+"""
+
 import os
+from typing import Callable, List
 
 from langchain_community.document_loaders import DirectoryLoader
 from pathlib import Path
 from langchain_community.vectorstores import FAISS
 from langchain_openai import OpenAIEmbeddings
 
+import surycate_bot_ls2716.utils as utils
+
 # Set the logger
 logger = utils.get_logger(__name__)
+
 
 embeddings = OpenAIEmbeddings()
 
@@ -18,8 +34,22 @@ embeddings = OpenAIEmbeddings()
 class Memory(object):
     """Memory class."""
 
-    def __init__(self, memory_folder, db_filename=None) -> None:
-        """Initialize the memory."""
+    def __init__(self, memory_folder: str, db_filename: str = None,
+                 get_embeddings: Callable = OpenAIEmbeddings) -> None:
+        """Initialize the Memory class.
+
+        Args:
+            memory_folder: str
+                The folder with the memories.
+            db_filename: str, default=None
+                The filename of the FAISS index.
+            get_embeddings: Callable, default=OpenAIEmbeddings
+                The callable that returns the embeddings.
+
+        """
+        # Define the embeddings
+        self.embeddings = get_embeddings()
+        # Set the memory folder
         self.memory_folder = memory_folder
         # Get the filenames in the memory folder
         filenames = os.listdir(memory_folder)
@@ -34,14 +64,20 @@ class Memory(object):
         self.docs = self.loader.load()
         if db_filename is not None:
             self.db = FAISS.load_local(
-                db_filename, embeddings, allow_dangerous_deserialization=True)
+                db_filename, self.embeddings, allow_dangerous_deserialization=True)
         else:
             self.db = FAISS.from_documents(self.docs, embeddings)
 
     def save_index(self, filename="faiss_index"):
+        """Save the index to a file.
+
+        Args:
+            filename: str, default="faiss_index"
+                The filename of the index.
+        """
         self.db.save_local(filename)
 
-    def get_memories(self, query: str) -> list:
+    def get_memories(self, query: str) -> List[str]:
         """Return the memories regarding the query."""
         return self.db.similarity_search(query)
 
@@ -49,7 +85,8 @@ class Memory(object):
 class KeyValueMemory():
     """Define a key-value memory."""
 
-    def __init__(self, memory_folder, db_filename=None) -> None:
+    def __init__(self, memory_folder: str, db_filename: str = None,
+                 get_embeddings: Callable = OpenAIEmbeddings) -> None:
         """Initialize the memory - the memory takes a folder with memories as input.
         The memory folder should have a subdirectory keys with the keys and a subdirectory values with the values.
 
@@ -58,13 +95,24 @@ class KeyValueMemory():
 
         The joining of keys and values are done through metadata.
         Key files are named memory_<number>.key.md and value files are named memory_<number>.value.md.
-        """
 
+        Args:
+            memory_folder: str
+                The folder with the memories. It should contain subfolders 'keys' and 'values'.
+            db_filename: str, default=None
+                The filename of the FAISS index.
+            get_embeddings: Callable, default=OpenAIEmbeddings
+                The callable that returns the embeddings.
+
+        """
+        # Define the embeddings
+        self.embeddings = get_embeddings()
+        # Set the memory folder
         self.memory_folder = memory_folder
         # Get the key folder
-        key_folder = os.path.join(memory_folder, "keys")
+        key_folder = os.path.join(memory_folder, 'keys')
         # Get the value folder
-        value_folder = os.path.join(memory_folder, "values")
+        value_folder = os.path.join(memory_folder, 'values')
 
         # Get the filenames in the key folder
         filenames = os.listdir(key_folder)
@@ -80,7 +128,7 @@ class KeyValueMemory():
         # If the db_filename is not None, load the db from the faiss file
         if db_filename is not None:
             self.db = FAISS.load_local(
-                db_filename, embeddings, allow_dangerous_deserialization=True)
+                db_filename, self.embeddings, allow_dangerous_deserialization=True)
         else:
             self.db = FAISS.from_documents(self.key_docs, embeddings)
 
@@ -88,14 +136,16 @@ class KeyValueMemory():
         self.value_loader = DirectoryLoader(value_folder, glob="*.md")
         self.value_docs = self.value_loader.load()
 
+        # Create dictionaries for the keys and values which contain the memory number as the key
+        # and the langchain_community document as the value
         self.keys_dict = {}
         self.values_dict = {}
 
         # For each document in key_docs, add the id to the metadata
         for doc in self.key_docs:
-            # Get the memory number from the path
             # Get filename from the source
             filename = Path(doc.metadata["source"]).name
+            # Get the memory number from the path
             memory_number = int(
                 filename.split("_")[1].split(".")[0])
             doc.metadata["key_id"] = memory_number
@@ -103,9 +153,9 @@ class KeyValueMemory():
             self.keys_dict[memory_number] = doc
         # Perform the same for the value docs
         for doc in self.value_docs:
-            # Get the memory number from the path
             # Get filename from the source
             filename = Path(doc.metadata["source"]).name
+            # Get the memory number from the path
             memory_number = int(
                 filename.split("_")[1].split(".")[0])
             doc.metadata["value_id"] = memory_number
@@ -113,6 +163,14 @@ class KeyValueMemory():
             self.values_dict[memory_number] = doc
 
     def save_index(self, filename="faiss_index", path=None):
+        """Save the index to a file.
+
+        Args:
+            filename: str, default="faiss_index"
+                The filename of the index.
+            path: str, default=None
+                The path to save the index.
+        """
         if path is None:
             path = os.path.join(self.memory_folder, filename)
         self.db.save_local(path)

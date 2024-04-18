@@ -9,49 +9,37 @@ def test_shell_initialisation():
     """Test shell initialisation"""
     shell = Shell()
     assert shell is not None
+    output = shell._get_stdout()
+    assert output == ""
 
-
-@pytest.fixture(scope="module")
-def powershell():
-    """Open a shell process"""
-    shell = Shell(sh=['powershell'])
-    time.sleep(0.5)
-    output = shell.get_stdout()
-
-    yield shell
-    # Close the shell process
     shell.close()
-
-
-def test_powershell_command(powershell):
-    powershell.send_command("ls")
-    output = powershell.get_stdout()
-    # Assert that the output contains "Directory: "
-    assert output.find("Directory: ") != -1
-
-
-def test_powershell_command_error(powershell):
-    powershell.send_command("ll")
-    output = powershell.get_stdout()
-    errors = powershell.get_stderr()
-    # Assert that the term ll is not recognized
-    assert errors.find("ObjectNotFound") != -1
 
 
 @pytest.fixture(scope="module")
 def bash():
     """Open a shell process"""
     shell = Shell()
-    time.sleep(0.5)
-    output = shell.get_stdout()
-
     yield shell
     # Close the shell process
     shell.close()
 
 
 def test_bash_command(bash):
-    bash.send_command("ll")
-    output = bash.get_stdout()
+    """Test a bash command "ll" that should return a list of files and directories
+    in the current directory."""
+    output, error, status_code = bash.execute_command("ll")
     # Assert that the output contains "drwxrwxrwx "
     assert output.find("drwxrwxrwx") != -1
+
+
+def test_bash_command_error(bash):
+    """Test a bash command that should return an error"""
+    output, error, status_code = bash.execute_command("not_a_command")
+    assert status_code != 0
+    assert error.__contains__("not_a_command: command not found")
+
+
+def test_bash_command_timeout(bash):
+    """Test the timeout of a command"""
+    with pytest.raises(TimeoutError):
+        bash.execute_command("sleep 0.2", timeout=0.1)
