@@ -32,6 +32,7 @@ class Shell(object):
         self.t_stdout.start()
         self.t_stderr.start()
         self.command_timeout = command_timeout
+        time.sleep(0.2)
         _ = self._get_stdout()
         _ = self._get_stderr()
         self.add_aliases()

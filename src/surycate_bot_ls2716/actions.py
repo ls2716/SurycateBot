@@ -38,10 +38,10 @@ def execute_shell_command(state, arguments) -> str:
     # and return the error.
     if status_code == 0:
         observation = f'Command "{command}"'\
-            + f' was executed successfully.\nOUTPUT:\n```\n{output}```'
+            + f' was executed successfully.\nOUTPUT:\n~\n{output}~'
     else:
         observation = f'Command "{command}"'\
-            + f' resulted in error.\nERROR:\n```\n{error}```'
+            + f' resulted in error.\nERROR:\n~\n{error}~'
     # Return the observation and the task_done flag set to False
     # Shell commands never end the task
     return observation, False
@@ -63,11 +63,19 @@ def task_done(state: Dict, arguments: List[str]) -> Tuple[str, bool]:
     return "Task is done.", True
 
 
+def tell(state: Dict, arguments: List[str]) -> Tuple[str, bool]:
+    """Tell the user something."""
+    # TODO: Implement the tell action
+    # Return the message and the task_done flag set to False
+    return "None", False
+
+
 # Specify the available actions in the action_set dictionary
 DEFAULT_ACTION_SET = {
     "get_time": get_time,
     "exit": task_done,
-    "cmd": execute_shell_command
+    "cmd": execute_shell_command,
+    "tell": tell
 }
 
 

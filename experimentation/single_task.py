@@ -68,17 +68,21 @@ def loop(llm, experiences: memory.KeyValueMemory, task: tasks.Task, actions, sta
 if __name__ == "__main__":
     # Set up an LLM
     llm = get_llm()
+    logger.debug(f"LLM: {llm}")
     # Set up the memory
     mem = memory.KeyValueMemory(
         'key_value_experiences')
+    logger.debug(f"Memory: {mem}")
     # Set a task
     task = tasks.Task("Create a folder named 'lolapaloza' in the current directory",
                       "You are in the current directory and working on a project to create a website.")
     # Set up actions
-    actions = actions.Actions()
+    actions = actions.ActionExecutor(action_set=actions.DEFAULT_ACTION_SET)
+    logger.debug(f"Actions: {actions}")
 
     # set up shell
     shell = Shell()
+    logger.debug(f"Shell: {shell}")
 
     state = {
         "llm": llm,

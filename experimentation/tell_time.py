@@ -52,7 +52,7 @@ def loop(llm, experiences: memory.KeyValueMemory, task: tasks.Task, actions, sta
         history += response + "\n"
 
         # Get the action
-        action = response.split(":")[1].strip()
+        action = response.replace("Action:", "").strip()
         # Execute the action
         observation, task_done = actions.execute(action, state)
         # Append the observation to the prompt if the task is not done
@@ -68,17 +68,22 @@ def loop(llm, experiences: memory.KeyValueMemory, task: tasks.Task, actions, sta
 if __name__ == "__main__":
     # Set up an LLM
     llm = get_llm()
+    logger.debug("LLM set up.")
     # Set up the memory
     mem = memory.KeyValueMemory(
         'key_value_experiences')
+    logger.debug("Memory set up.")
     # Set a task
     task = tasks.Task("What is the current time?",
                       "No context available for this task.")
+    logger.debug("Task set up.")
     # Set up actions
-    actions = actions.Actions()
+    actions = actions.ActionExecutor(actions.DEFAULT_ACTION_SET)
+    logger.debug("Actions set up.")
 
-    # set up shell
+    # Set up shell
     shell = Shell()
+    logger.debug("Shell set up.")
 
     state = {
         "llm": llm,
