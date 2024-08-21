@@ -5,9 +5,9 @@ import time
 from typing import Tuple
 import asyncio
 from queue import Queue
-import pexpect
+import pexpect  # type: ignore
 import re
-import pyte
+import pyte  # type: ignore
 
 
 class PexpectShell(object):
