@@ -102,7 +102,7 @@ def temp_folder():
 
 def test_memory_save(mem, temp_folder):
     """Test the save method of the memory."""
-    mem.save_index(path=os.path.join(temp_folder, 'faiss_index'))
+    mem.save_index(os.path.join(temp_folder, 'faiss_index'))
     print(os.listdir(temp_folder))
     assert os.path.exists(os.path.join(
         temp_folder, "faiss_index")), "Memory file was not saved!"
@@ -112,7 +112,7 @@ def test_memory_save(mem, temp_folder):
 @pytest.fixture(scope="module")
 def index(temp_folder, mem):
     index = os.path.join(temp_folder, "faiss_index")
-    mem.save_index(path=index)
+    mem.save_index(index)
     return index
 
 

@@ -19,32 +19,20 @@ def execute_shell_command(state, arguments) -> str:
     command = " ".join(arguments)
     # Get the shell object
     shell = state['shell']
-    if type(shell) is not shell_lib.Shell:
+    if type(shell) is not shell_lib.PexpectShell:
         raise TypeError("Shell object in the state is not of type Shell.")
 
     # Log the command
     logger.debug(f"Shell command: {command}")
     # Execute the command
-    output, error, status_code = shell.execute_command(command)
+    output = shell.execute_command(command)
 
     # Log the output, error, and status code
     logger.debug(f"Shell output: {output}")
-    logger.debug(f"Shell error: {error}")
-    logger.debug(f"Shell status code: {status_code}")
 
-    # If the command is successful, create an observation stating command was successful
-    # and return the output.
-    # Else, create an observation that the command resulted in an error
-    # and return the error.
-    if status_code == 0:
-        observation = f'Command "{command}"'\
-            + f' was executed successfully.\nOUTPUT:\n~\n{output}~'
-    else:
-        observation = f'Command "{command}"'\
-            + f' resulted in error.\nERROR:\n~\n{error}~'
     # Return the observation and the task_done flag set to False
     # Shell commands never end the task
-    return observation, False
+    return output, False
 
 
 def get_time(state: Dict, arguments: List[str]) -> Tuple[str, bool]:
@@ -122,7 +110,7 @@ class ActionExecutor(object):
 
 if __name__ == "__main__":
     # Initialise the shell
-    shell = shell_lib.Shell(sh=['bash'])
+    shell = shell_lib.PexpectShell()
     # Set the state
     state = {
         "shell": shell
@@ -130,7 +118,7 @@ if __name__ == "__main__":
     # Set up the ActionExecutor
     actions = ActionExecutor(DEFAULT_ACTION_SET)
     # Execute the command
-    action = "cmd ls"
+    action = "cmd ls -la"
     observation, task_done = actions.execute(action, state)
     print(observation)
     # Close the shell

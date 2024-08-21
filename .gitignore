@@ -5,3 +5,9 @@ __pycache__/
 # Ignore old folders
 old/
 
+# Ignore virtualenv
+venv/
+.env
+.vscode/settings.json
+examples/faiss_single_task/index.faiss
+examples/faiss_single_task/index.pkl

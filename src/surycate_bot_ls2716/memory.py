@@ -105,8 +105,8 @@ class KeyValueMemory():
                 The callable that returns the embeddings.
 
         """
-        # Define the embeddings
-        self.embeddings = get_embeddings()
+        # # Define the embeddings
+        # self.embeddings = get_embeddings()
         # Set the memory folder
         self.memory_folder = memory_folder
         # Get the key folder
@@ -127,8 +127,14 @@ class KeyValueMemory():
         self.key_docs = self.key_loader.load()
         # If the db_filename is not None, load the db from the faiss file
         if db_filename is not None:
-            self.db = FAISS.load_local(
-                db_filename, self.embeddings, allow_dangerous_deserialization=True)
+            try:
+                self.db = FAISS.load_local(
+                    db_filename, embeddings, allow_dangerous_deserialization=True)
+            except Exception as e:
+                logger.error(e)
+                logger.error(
+                    "Could not load the index from the file. Creating a new index.")
+                self.db = FAISS.from_documents(self.key_docs, embeddings)
         else:
             self.db = FAISS.from_documents(self.key_docs, embeddings)
 
@@ -162,7 +168,7 @@ class KeyValueMemory():
             # Add the document to the values_dict
             self.values_dict[memory_number] = doc
 
-    def save_index(self, filename="faiss_index", path=None):
+    def save_index(self, filename="faiss_index"):
         """Save the index to a file.
 
         Args:
@@ -171,9 +177,7 @@ class KeyValueMemory():
             path: str, default=None
                 The path to save the index.
         """
-        if path is None:
-            path = os.path.join(self.memory_folder, filename)
-        self.db.save_local(path)
+        self.db.save_local(filename)
 
     def get_memory(self, key: str):
         """Get the memory value for the key."""

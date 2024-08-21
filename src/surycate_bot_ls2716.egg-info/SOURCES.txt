@@ -3,7 +3,6 @@ README.md
 pyproject.toml
 src/surycate_bot_ls2716/__init__.py
 src/surycate_bot_ls2716/actions.py
-src/surycate_bot_ls2716/core.py
 src/surycate_bot_ls2716/llm.py
 src/surycate_bot_ls2716/main.py
 src/surycate_bot_ls2716/memory.py
