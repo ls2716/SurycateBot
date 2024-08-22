@@ -1,0 +1,1 @@
+I am working on a project to create a website. I want to create a README.md file with the description of the website and I think that I am in the project's directory called "WebsitePersonal". I want to create a markdown file with the description of the website.

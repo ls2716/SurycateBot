@@ -1,16 +1,18 @@
 """Execution of the bot"""
 
 # Import the logging module
-import surycate_bot_ls2716.utils as utils
-import surycate_bot_ls2716.actions as actions
-import surycate_bot_ls2716.prompt as prompt
-import surycate_bot_ls2716.memory as memory
-import surycate_bot_ls2716.tasks as tasks
+from surycate_bot_ls2716.shell import PexpectShell
 from surycate_bot_ls2716.llm import get_llm
-from surycate_bot_ls2716.shell import Shell
-
+import surycate_bot_ls2716.tasks as tasks
+import surycate_bot_ls2716.memory as memory
+import surycate_bot_ls2716.prompt as prompt
+import surycate_bot_ls2716.actions as actions
+import surycate_bot_ls2716.utils as utils
 # Set the logger
 logger = utils.get_logger(__name__)
+
+# Import the necessary modules
+logger.debug("Imports done.")
 
 
 def loop(llm, experiences: memory.KeyValueMemory, task: tasks.Task, actions, state: dict):
@@ -71,8 +73,9 @@ if __name__ == "__main__":
     logger.debug("LLM set up.")
     # Set up the memory
     mem = memory.KeyValueMemory(
-        'key_value_experiences')
-    logger.debug("Memory set up.")
+        '../src/surycate_bot_ls2716/key_value_experiences', db_filename='faiss_single_task')
+    logger.debug("Memory set up")
+    mem.save_index("faiss_single_task")
     # Set a task
     task = tasks.Task("What is the current time?",
                       "No context available for this task.")
@@ -82,7 +85,7 @@ if __name__ == "__main__":
     logger.debug("Actions set up.")
 
     # Set up shell
-    shell = Shell()
+    shell = PexpectShell()
     logger.debug("Shell set up.")
 
     state = {

@@ -22,3 +22,8 @@ python -m pytest # [optional path to test file]
 ## Documentation
 
 The documentation is based on file comments and on README.md file.
+
+## Platform
+
+The package requires pexpect, which is not available on Windows. The package
+is not tested on Windows, and it is not guaranteed to work on Windows.
