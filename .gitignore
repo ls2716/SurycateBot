@@ -11,3 +11,10 @@ venv/
 .vscode/settings.json
 examples/faiss_single_task/index.faiss
 examples/faiss_single_task/index.pkl
+
+# Ignore data
+*.faiss
+*.pkl
+
+# Ignore logs
+logs/
