@@ -1,0 +1,1 @@
+I just started a project to create my personal website. I have created a folder named "WebsitePersonal". I want to create a markdown file with the description of the website but I am now in the parent folder of the "WebsitePersonal" folder. I need to change the directory to the "WebsitePersonal" folder.

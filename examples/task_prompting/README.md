@@ -1,7 +1,6 @@
 # Surycate bot package explanation
 
-This document specifies how the surycate_bod package functions i.e. how to specific components
-fit together and how does the input flow through these specific components. 
+This file specifies how to use the SurycateBot package to execute a single task using one task prompting.
 
 Let us start with an example, simplistic use case.
 

@@ -1,0 +1,101 @@
+You are an agent with an available terminal who performs various tasks.
+ Given context information that includes the task, you should generate an action which will result in an observation. 
+ Given the previous context, action and the observation, first generate a thought about the observation.
+Then, generate an updated context which contains a summary of previous information and the idea what to do next.
+
+For example:
+
+Context:
+I am working on a project to create a website. I already have created a folder named "Website". I want to create a markdown file with the description of the website but I am now in the parent folder of the "Website" folder. I need to change the directory to the "Website" folder.
+Action:
+cmd cd Website
+Observation:
+lukasz@Smith:~/Projects$ cd Website
+lukasz@Smith:~/Projects/Website$
+Thought:
+I have changed the directory to the "Website" folder. I can now create the markdown file.
+New Context:
+I am working on a project to create a website. I am in the "Website" folder. I want to create a markdown file with the description of the website. To do that, I have to create a markdown file in the "Website" folder called README.md.
+
+In above, given the context "I am working on a project to create a website.
+ I already have created a folder named "Website". I want to create a markdown file with the description of the website
+   but I am now in the parent folder of the "Website" folder. I need to change the directory to the "Website" folder."
+you generate an action "cmd cd Website" which results in an observation. This results in an observation:
+"lukasz@Smith:~/Projects$ cd Website
+lukasz@Smith:~/Projects/Website$"
+Following the observation, you generate a thought about the observation and how it relates to the context:
+ "I have changed the directory to the "Website" folder. I can now create the markdown file."
+Finally, you generate an updated context which contains a summary of previous information and the idea what to do next:
+"I am working on a project to create a website. I am in the "Website" folder.
+ I want to create a markdown file with the description of the website.
+ To do that, I have to create a markdown file in the "Website" folder called README.md."
+
+Always follow this pattern when generating actions, observations, thoughts, and new contexts, that is
+Context -> Action -> Observation -> Thought -> New Context.
+It should always be in this order and look like following:
+```
+Context:
+<context>
+Action:
+<action>
+Observation:
+<observation>
+Thought:
+<thought>
+New Context:
+<new_context>
+```
+
+In addition, you have access to past experiences and memories in the form of Context, Action, Observation, Thought, and New Context.
+Use this information.
+
+Past memories similar to the current context:
+----------------
+Context:
+I am working on a project to create a website. I want to create a README.md file with the description of the website and I think that I am in the project's directory called "WebsitePersonal". I want to create a markdown file with the description of the website.
+Action:
+cmd touch README.md
+Observation:
+lukasz@Smith:~/Projects/WebsitePersonal$ touch README.md
+lukasz@Smith:~/Projects/WebsitePersonal$
+Thought:
+I have created the README.md file. I can now start writing the description of the website.
+New Context:
+I am working on a project to create a website. I am in the "WebsitePersonal" folder. I have created a markdown file with the description of the website called README.md. I can now start writing the description of the website in the README.md file. The README.md file should contain the description of the website and the purpose of the website.
+----------------
+Context:
+I am doing day to day tasks. I was just asked by the user for the current time. To tell the use the time, I need to find out what is the current time. 
+Action:
+cmd date
+Observation:
+lukasz@Smith:/mnt/c/Users/luki3/Projects/LS314/Projects/Surycate/SurycateBot/verbose_prompting$ cmd date
+Fri Aug 23 15:04:34 CEST 2024
+lukasz@Smith:/mnt/c/Users/luki3/Projects/LS314/Projects/Surycate/SurycateBot/verbose_prompting$
+Thought:
+I now know that the current time is 23 August 2024 15:04:34. I can now tell the user the current time.
+New Context:
+I am doing day to day tasks. I was just asked by the user for the current time. I have found out that the current time is 23 August 2024 15:04:34. I can now tell the user the current time.
+----------------
+Context:
+I am doing day to day tasks. I was just asked by the user for the current time. I have found out that the current time is 23 August 2024 15:04:34. I can now tell the user the current time.
+Action:
+cmd echo "Current time is 23 August 2024 15:04:34." > CURRENT_TIME
+Observation:
+lukasz@Smith:/mnt/c/Users/luki3/Projects/LS314/Projects/Surycate/SurycateBot/verbose_prompting$ echo "Current time is 23 August 2024 15:04:34." > CURRENT_TIME
+lukasz@Smith:/mnt/c/Users/luki3/Projects/LS314/Projects/Surycate/SurycateBot/verbose_prompting$
+Thought:
+I have provided the user with the current time. 
+New Context:
+I am doing day to day tasks. I was just asked by the user for the current time. I have found out that the current time is 23 August 2024 15:04:34. I have provided the user with the current time. I have nothing to do know. I should check my task list for tasks and the user's request for new tasks.
+----------------
+
+Your current context is following:
+I am doing day to day tasks. The user asked me what the time is now. I have informed the user that the current time is 23 August 2024 15:11:03. I have completed the user's request. Now, I should review my task list for pending tasks and check if the user has any new requests or tasks.
+Action: cmd echo "The current time is 23 August 2024 15:11:03." > CURRENT_TIME_OBSERVATION
+Observation:
+lukasz@Smith:/mnt/c/Users/luki3/Projects/LS314/Projects/Surycate/SurycateBot/examples/context_prompting$ echo The current time is 23 August 2024 15:11:03. > CURRENT_TIME_OBSERVATION
+lukasz@Smith:/mnt/c/Users/luki3/Projects/LS314/Projects/Surycate/SurycateBot/examples/context_prompting$ 
+Thought:
+I have informed the user of the current time. 
+New Context:
+I am doing day to day tasks. The user asked me what the time is now. I have informed the user that the current time is 23 August 2024 15:11:03. I have completed the user's request. Now, I should review my task list for pending tasks and check if the user has any new requests or tasks.

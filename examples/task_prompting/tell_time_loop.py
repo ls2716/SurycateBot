@@ -1,19 +1,21 @@
 """Execution of the bot"""
 
 # Import the logging module
-import surycate_bot_ls2716.utils as utils
-import surycate_bot_ls2716.actions as actions
-import surycate_bot_ls2716.prompt as prompt
-import surycate_bot_ls2716.memory as memory
-import surycate_bot_ls2716.tasks as tasks
+from surycate_bot_ls2716.shell import PexpectShell
 from surycate_bot_ls2716.llm import get_llm
-from surycate_bot_ls2716.shell import Shell
-
+import surycate_bot_ls2716.tasks as tasks
+import surycate_bot_ls2716.memory as memory
+import prompt
+import surycate_bot_ls2716.actions as actions
+import surycate_bot_ls2716.utils as utils
 # Set the logger
 logger = utils.get_logger(__name__)
 
+# Import the necessary modules
+logger.debug("Imports done.")
 
-def loop(llm, experiences: memory.KeyValueMemory, task: tasks.Task, actions, state: dict):
+
+def loop(task, llm, experiences: memory.KeyValueMemory, actions, state: dict):
     """Execute one task."""
 
     # Get the experiences related to the task
@@ -52,7 +54,7 @@ def loop(llm, experiences: memory.KeyValueMemory, task: tasks.Task, actions, sta
         history += response + "\n"
 
         # Get the action
-        action = response.split(":")[1].strip()
+        action = response.replace("Action:", "").strip()
         # Execute the action
         observation, task_done = actions.execute(action, state)
         # Append the observation to the prompt if the task is not done
@@ -68,16 +70,23 @@ def loop(llm, experiences: memory.KeyValueMemory, task: tasks.Task, actions, sta
 if __name__ == "__main__":
     # Set up an LLM
     llm = get_llm()
+    logger.debug("LLM set up.")
     # Set up the memory
-    mem = memory.KeyValueMemory('key_value_experiences')
+    mem = memory.KeyValueMemory(
+        'key_value_experiences', db_filename='faiss_single_task')
+    logger.debug("Memory set up")
+    mem.save_index("faiss_single_task")
     # Set a task
-    task = tasks.Task('Create a folder named "hola" in the current directory',
-                      'You are in the current directory and working on a project to create a website.')
+    task = tasks.Task("What is the current time?",
+                      "No context available for this task.")
+    logger.debug("Task set up.")
     # Set up actions
-    actions = actions.ActionExecutor(action_set=actions.DEFAULT_ACTION_SET)
+    actions = actions.ActionExecutor(actions.DEFAULT_ACTION_SET)
+    logger.debug("Actions set up.")
 
-    # set up shell
-    shell = Shell()
+    # Set up shell
+    shell = PexpectShell()
+    logger.debug("Shell set up.")
 
     state = {
         "llm": llm,
@@ -87,4 +96,4 @@ if __name__ == "__main__":
     }
 
     # Execute the task
-    loop(llm, mem, task, actions, state)
+    loop(task, llm, mem, actions, state)

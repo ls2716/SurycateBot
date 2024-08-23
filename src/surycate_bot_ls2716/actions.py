@@ -63,7 +63,8 @@ DEFAULT_ACTION_SET = {
     "get_time": get_time,
     "exit": task_done,
     "cmd": execute_shell_command,
-    "tell": tell
+    "tell": tell,
+    'no_action': lambda state, arguments: ("None", False)
 }
 
 
