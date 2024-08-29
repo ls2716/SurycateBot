@@ -100,3 +100,22 @@ def test_timeout(bash):
     assert output[0].endswith("sleep 0.5")
     assert output[1].endswith("$ ")
     assert output[1].startswith("lukasz")
+
+
+def test_line_cut(bash):
+    """Test that the maximum number of lines is 14."""
+    # Execute the command and get the output
+    output = bash.execute_command('echo "line 1\nline 2\nline 3\nline 4\nline 5\nline 6\nline 7\nline 8\nline 9\nline 10\nline 11\nline 12\nline 13\nline 14\nline 15"')
+    # Assert the output contains what is expected
+    assert output.find("line 1") != -1
+    assert output.find("line 15") != -1
+    assert output.find("line 8") == -1
+    assert output.endswith("$ ")
+    assert output.find("...") != -1
+    assert output.find("line 6") == -1
+    # Get the last 16 lines of the output
+    output = bash.get_last_lines(17)
+    print(output)
+    # Assert the output is right
+    assert len(output.split("\n")) == 17
+    assert output.startswith('> line 15')

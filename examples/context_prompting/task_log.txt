@@ -64,38 +64,85 @@ New Context:
 I am working on a project to create a website. I am in the "WebsitePersonal" folder. I have created a markdown file with the description of the website called README.md. I can now start writing the description of the website in the README.md file. The README.md file should contain the description of the website and the purpose of the website.
 ----------------
 Context:
-I am doing day to day tasks. I was just asked by the user for the current time. To tell the use the time, I need to find out what is the current time. 
+I am working on a project to create a website. I have to create a folder for the project in the Projects directory. I want to create a folder named "WebsitePersonal" but I am not sure whether I am in the Projects directory. I need to change directory to the Projects directory. I know that it is in the home directory.
 Action:
-cmd date
+cmd cd ~/Projects
 Observation:
-lukasz@Smith:/mnt/c/Users/luki3/Projects/LS314/Projects/Surycate/SurycateBot/verbose_prompting$ cmd date
-Fri Aug 23 15:04:34 CEST 2024
-lukasz@Smith:/mnt/c/Users/luki3/Projects/LS314/Projects/Surycate/SurycateBot/verbose_prompting$
+lukasz@Smith:~$ cd ~/Projects
+lukasz@Smith:~/Projects$
 Thought:
-I now know that the current time is 23 August 2024 15:04:34. I can now tell the user the current time.
+I have changed the directory to the Projects directory. I can now create the folder for the project.
 New Context:
-I am doing day to day tasks. I was just asked by the user for the current time. I have found out that the current time is 23 August 2024 15:04:34. I can now tell the user the current time.
+I am working on a project to create a website. I am in the Projects directory. I want to create a folder for the project named "WebsitePersonal". To do that, I have to create a folder in the Projects directory named "WebsitePersonal". Afterwards, I can continue with the project.
 ----------------
 Context:
-I am doing day to day tasks. I was just asked by the user for the current time. I have found out that the current time is 23 August 2024 15:04:34. I can now tell the user the current time.
+My task now is to update the packages on the server. First, I will have to connect to the server since I am not connected yet. I will then update the packages. I know that the server is located at ls314.com and I have the credentials to connect to it. I have to connect to the server to update the packages. My login is "lukasz".
 Action:
-cmd echo "Current time is 23 August 2024 15:04:34." > CURRENT_TIME
+cmd ssh lukasz@ls314.com
 Observation:
-lukasz@Smith:/mnt/c/Users/luki3/Projects/LS314/Projects/Surycate/SurycateBot/verbose_prompting$ echo "Current time is 23 August 2024 15:04:34." > CURRENT_TIME
-lukasz@Smith:/mnt/c/Users/luki3/Projects/LS314/Projects/Surycate/SurycateBot/verbose_prompting$
+lukasz@Smith:/mnt/c/Users/luki3/Projects/LS314/Projects/Surycate/SurycateBot$ ssh lukasz@ls314.com
+Welcome to Ubuntu 20.04 LTS (GNU/Linux 5.4.0-33-generic x86_64)
+
+Documentation:  https://help.ubuntu.com
+
+Management:     https://landscape.canonical.com
+
+Support:        https://ubuntu.com/advantage
+
+System information as of Sun 25 Aug 2024 11:08:55 AM UTC
+
+System load:                      0.41
+  Usage of /:                       57.2% of 24.06GB
+  Memory usage:                     49%
+  Swap usage:                       84%
+  Processes:                        154
+  Users logged in:                  0
+  IPv4 address for br-afa22d8023a8: 172.19.0.1
+  IPv4 address for docker0:         172.17.0.1
+  IPv4 address for docker_gwbridge: 172.18.0.1
+  IPv4 address for eth0:            178.79.185.131
+  IPv6 address for eth0:            2a01:7e00::f03c:92ff:fe1f:641c
+
+Strictly confined Kubernetes makes edge and IoT secure. Learn how MicroK8s
+   just raised the bar for easy, resilient and secure K8s cluster deployment.
+
+https://ubuntu.com/engage/secure-kubernetes-at-the-edge
+
+444 updates can be installed immediately.
+307 of these updates are security updates.
+To see these additional updates run: apt list --upgradable
+
+New release '22.04.3 LTS' available.
+Run 'do-release-upgrade' to upgrade to it.
+
+Last login: Sat Aug 10 21:29:08 2024 from 31.94.20.79
+lukasz@ls314:~$ 
 Thought:
-I have provided the user with the current time. 
+I have successfully connected to the server. I can now update the packages on the server.
 New Context:
-I am doing day to day tasks. I was just asked by the user for the current time. I have found out that the current time is 23 August 2024 15:04:34. I have provided the user with the current time. I have nothing to do know. I should check my task list for tasks and the user's request for new tasks.
+My task now is to update the linux packages on my server. I have successfully connected to the server. I can now update the packages on the server. I have to run the command "apt list --upgradable" to see the list of packages that can be updated. I can then run the command "sudo apt upgrade" to update the packages. I have to make sure that I update the security updates first. I can then upgrade the system to the new release '22.04.3 LTS' by running the command "do-release-upgrade".
 ----------------
 
 Your current context is following:
-I am doing day to day tasks. The user asked me what the time is now. I have informed the user that the current time is 23 August 2024 15:11:03. I have completed the user's request. Now, I should review my task list for pending tasks and check if the user has any new requests or tasks.
-Action: cmd echo "The current time is 23 August 2024 15:11:03." > CURRENT_TIME_OBSERVATION
+My task is to update the packages on my Linux machine located at ls314.com. I have successfully connected to the server. There is a new release '22.04.3 LTS' available, and a system restart is required. I need to update the packages first using "apt list --upgradable" and then run "sudo apt upgrade" to update them. After updating the packages, I should perform the system upgrade by running "do-release-upgrade". Finally, I will need to restart
+Action:
+cmd ssh lukasz@ls314.com
 Observation:
-lukasz@Smith:/mnt/c/Users/luki3/Projects/LS314/Projects/Surycate/SurycateBot/examples/context_prompting$ echo The current time is 23 August 2024 15:11:03. > CURRENT_TIME_OBSERVATION
-lukasz@Smith:/mnt/c/Users/luki3/Projects/LS314/Projects/Surycate/SurycateBot/examples/context_prompting$ 
+lukasz@Smith:/mnt/c/Users/luki3/Projects/LS314/Projects/Surycate/SurycateBot/examples/context_prompting$ ssh lukasz@ls314.com
+Welcome to Ubuntu 20.04 LTS (GNU/Linux 5.4.0-33-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+...
+
+New release '22.04.3 LTS' available.
+Run 'do-release-upgrade' to upgrade to it.
+
+
+*** System restart required ***
+Last login: Tue Aug 27 11:52:15 2024 from 192.41.114.228
+lukasz@ls314:~$ 
 Thought:
-I have informed the user of the current time. 
+I have successfully connected to the server at ls314.com. I can see that there is a new release '22.04.3 LTS' available and a system restart is required. I should update the packages and then perform the system upgrade.
 New Context:
-I am doing day to day tasks. The user asked me what the time is now. I have informed the user that the current time is 23 August 2024 15:11:03. I have completed the user's request. Now, I should review my task list for pending tasks and check if the user has any new requests or tasks.
+My task is to update the packages on my Linux machine located at ls314.com. I have successfully connected to the server. There is a new release '22.04.3 LTS' available, and a system restart is required. I need to update the packages first using "apt list --upgradable" and then run "sudo apt upgrade" to update them. After updating the packages, I should perform the system upgrade by running "do-release-upgrade". Finally, I will need to restart

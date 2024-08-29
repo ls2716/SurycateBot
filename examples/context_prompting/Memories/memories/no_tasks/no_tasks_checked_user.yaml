@@ -1,0 +1,18 @@
+metadata:
+  title: "no_tasks"
+  description:
+    "This is a memory in which you have no tasks to do. It points to look for input or
+    tasks in the task list."
+context: |
+  I have no tasks to do. I should look for the user input or tasks in the task list.
+action_thought: |
+  I have neither looked at the user input nor the task list. I will look at the user input first.
+action: |
+  check_user_input
+observation: |
+  User input is empty.
+thought: |
+  I have checked the user input and it is empty.
+new_context: |
+  I have no tasks to do. I have just looked at the user input and
+  it is empty but I have not checked the task list yet. I should look at the task list now.

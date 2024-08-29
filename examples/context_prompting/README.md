@@ -120,3 +120,5 @@ I am working on my personal website. I am now in the "Website" folder. I want to
 
 - I have finished the example with telling the time - it works.
 - Should there be an after through after the context and before the action? To decide what to do?
+- Context lenght might be too long
+- Separation sign is a problem when generating contexts: CHATGPT might generate a split.

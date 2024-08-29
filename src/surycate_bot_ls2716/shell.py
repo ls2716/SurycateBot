@@ -9,6 +9,11 @@ import pexpect  # type: ignore
 import re
 import pyte  # type: ignore
 
+# Import the logging module
+import surycate_bot_ls2716.utils as utils
+
+# Set the logger
+logger = utils.get_logger(__name__)
 
 class PexpectShell(object):
     """Pexpect shell object
@@ -81,6 +86,8 @@ class PexpectShell(object):
         # If the prompt is returned decode both before and after
         if i == 0:
             output = self.child.before + self.child.after
+        else:
+            logger.warning("Timeouted output")
         # If the timeout is returned, wait for the output to be complete
         previous_size = -1  # Set dummy previous size
         # While the size changes after 0.02 seconds read the output again
@@ -101,6 +108,12 @@ class PexpectShell(object):
         # Clear the buffers
         self.child._buffer = self.child.buffer_type()
         self.child._before = self.child.buffer_type()
+        # Compute the returned output by assembling the output lines
+        returned_output_lines = [self.terminal_content[-1] + output_lines[0]]
+        if len(output_lines) > 14: # If the output is too long cut it
+            returned_output_lines += output_lines[1:5] + ['...'] + output_lines[-8:]
+        else:
+            returned_output_lines += output_lines[1:]
         # Append the output to the last line of terminal content
         # This will be returned as the output
         returned_output = self.terminal_content[-1] + '\n'.join(output_lines)
@@ -108,11 +121,14 @@ class PexpectShell(object):
         self.terminal_content[-1] += output_lines[0]
         # Append the rest of the lines as elements
         self.terminal_content += output_lines[1:]
+        # Assemble the output from the returned output lines
+        returned_output = '\n'.join(returned_output_lines)
         # Add a space at the end of the terminal content if it ends with a prompt
         if returned_output.endswith('$'):
             self.terminal_content[-1] += ' '
             returned_output += ' '
-        # Return the output and the status code
+        # If there are two many lines in the terminal content cut the middle
+        # Return the output
         return returned_output
 
     def get_last_lines(self, n: int) -> str:
