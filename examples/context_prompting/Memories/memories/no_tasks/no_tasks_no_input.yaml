@@ -1,19 +1,20 @@
 metadata:
   title: "no_tasks"
-  description:
+  description: 
     "This is a memory in which you have no tasks to do. Having chacked the the user input and the task list and found them both empty,
      you have nothing to do and can wait for a bit before checking again."
-context: |
-  I have no tasks to do. I have just looked at the user input and at the task list - they are both empty.
-  I have nothing to do so I can wait for a bit before checking again.
-action_thought: |
-  I will sleep for a bit before checking again.
-action: |
-  sleep 10
-observation: |
-  I have slept for 10 seconds.
-thought: |
-  I have waited a bit and I should check for tasks again.
-new_context: |
-  I have no tasks to do. I have just waited for a bit and I should check for tasks again. I should check the user input
-  and the task list again.
+context: 
+  "I have no tasks to do. I have just looked at the user input and at the task list 
+  - they are both empty.
+  I have nothing to do so I can wait for a bit before checking again."
+action_thought: 
+  "I will sleep for a bit before checking again."
+action: 
+  "sleep 10"
+observation: 
+  "I have slept for 10 seconds."
+thought: 
+  "I have waited a bit and I should check for tasks again."
+new_context: 
+  "I have no tasks to do. I have just waited for a bit and I should check for tasks again. I should check the user input
+  and the task list again."

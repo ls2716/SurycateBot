@@ -60,6 +60,8 @@ def loop(task, llm, experiences: memory.KeyValueMemory, actions, state: dict):
             history += "Observation: " + observation + "\nThought: "
         # Update the history
         task.history = history
+        with open("single_task_log.txt", "w+") as f:
+            f.write(history)
     # Return the task
     return task
 

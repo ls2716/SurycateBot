@@ -1,0 +1,9 @@
+START:
+Thought: 
+I need to create a folder named 'lolapaloza' in the current directory.
+Action: cmd mkdir lolapaloza
+Observation: lukasz@Smith:/mnt/c/Users/luki3/Projects/LS314/Projects/Surycate/SurycateBot/examples/task_prompting$ mkdir lolapaloza
+lukasz@Smith:/mnt/c/Users/luki3/Projects/LS314/Projects/Surycate/SurycateBot/examples/task_prompting$ 
+Thought: 
+The folder 'lolapaloza' has been created successfully.
+Action: exit
