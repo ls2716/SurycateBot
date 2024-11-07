@@ -13,7 +13,7 @@ logger = utils.get_logger(__name__)
 
 # Define default prompt
 
-default = """You are an agent with an available terminal who performs various tasks.
+default_old = """You are an agent with an available terminal who performs various tasks.
  Given context information that includes the task, you should generate an action which will result in an observation. 
  Given the previous context, action and the observation, first generate a thought about the observation.
 Then, generate an updated context which contains a summary of previous information and the idea what to do next.
@@ -48,7 +48,7 @@ Finally, you generate an updated context which contains a summary of previous in
 Always follow this pattern when generating actions, observations, thoughts, and new contexts, that is
 Context -> Action -> Observation -> Thought -> New Context.
 It should always be in this order and look like following:
-```
+
 Context:
 <context>
 Action:
@@ -59,7 +59,7 @@ Thought:
 <thought>
 New Context:
 <new_context>
-```
+
 
 In addition, you have access to past experiences and memories in the form of Context, Action, Observation, Thought, and New Context.
 Use this information.
@@ -69,7 +69,30 @@ Past memories similar to the current context:
 {similar_tasks}
 ----------------
 
-Your current context is following:
+Context:
+{task_context}
+{history}"""
+
+default = """Complete using the following template:
+
+Context:
+<context>
+Action:
+<action>
+Observation:
+<observation>
+Thought:
+<thought>
+New Context:
+<new_context>
+
+
+Here are some examples that you should base the completions on:
+----------------
+{similar_tasks}
+----------------
+
+Context:
 {task_context}
 {history}"""
 

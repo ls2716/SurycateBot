@@ -51,6 +51,8 @@ def loop(context, llm, experiences: memory.KeyValueMemory, actions, state: dict)
         # Get the new context
         prompt_text = prompt.build_prompt(
             related_experiences, context, history=history)
+        print(prompt_text)
+        input("Prompt ok?")
         new_context = llm.invoke(prompt_text).content
         logger.debug(f"New context: {new_context}")
         input("New context ok?")
@@ -70,7 +72,7 @@ def loop(context, llm, experiences: memory.KeyValueMemory, actions, state: dict)
 
 if __name__ == "__main__":
     # Set up an LLM
-    llm = get_llm()
+    llm = get_llm(model="gpt-4o-mini")
     logger.debug("LLM set up")
     # Set up the memory
     mem = memory.KeyValueMemory(
@@ -78,8 +80,7 @@ if __name__ == "__main__":
     logger.debug("Memory set up")
     # mem.save_index("verbose_memory_faiss")
     # Set a task
-    context = """The user asked me what the time is now.
-        """
+    context = """The user asked me what the time is now."""
     # Strip the additional whitespace from the context and extra spaces between words
     context = ' '.join(context.split())
     logger.debug(f"Context: {context}")

@@ -23,3 +23,5 @@ def test_simple_completion(llm):
     completion = llm.invoke("What is two plus two?")
     print(completion)
     assert completion.content.find("Two plus two equals four.") != -1
+    # Assert that model name is correct
+    assert completion.response_metadata['model_name'].find("gpt-4o-mini") != -1

@@ -1,39 +1,5 @@
-You are an agent with an available terminal who performs various tasks.
- Given context information that includes the task, you should generate an action which will result in an observation. 
- Given the previous context, action and the observation, first generate a thought about the observation.
-Then, generate an updated context which contains a summary of previous information and the idea what to do next.
+Complete using the following template:
 
-For example:
-
-Context:
-I am working on a project to create a website. I already have created a folder named "Website". I want to create a markdown file with the description of the website but I am now in the parent folder of the "Website" folder. I need to change the directory to the "Website" folder.
-Action:
-cmd cd Website
-Observation:
-lukasz@Smith:~/Projects$ cd Website
-lukasz@Smith:~/Projects/Website$
-Thought:
-I have changed the directory to the "Website" folder. I can now create the markdown file.
-New Context:
-I am working on a project to create a website. I am in the "Website" folder. I want to create a markdown file with the description of the website. To do that, I have to create a markdown file in the "Website" folder called README.md.
-
-In above, given the context "I am working on a project to create a website.
- I already have created a folder named "Website". I want to create a markdown file with the description of the website
-   but I am now in the parent folder of the "Website" folder. I need to change the directory to the "Website" folder."
-you generate an action "cmd cd Website" which results in an observation. This results in an observation:
-"lukasz@Smith:~/Projects$ cd Website
-lukasz@Smith:~/Projects/Website$"
-Following the observation, you generate a thought about the observation and how it relates to the context:
- "I have changed the directory to the "Website" folder. I can now create the markdown file."
-Finally, you generate an updated context which contains a summary of previous information and the idea what to do next:
-"I am working on a project to create a website. I am in the "Website" folder.
- I want to create a markdown file with the description of the website.
- To do that, I have to create a markdown file in the "Website" folder called README.md."
-
-Always follow this pattern when generating actions, observations, thoughts, and new contexts, that is
-Context -> Action -> Observation -> Thought -> New Context.
-It should always be in this order and look like following:
-```
 Context:
 <context>
 Action:
@@ -44,12 +10,9 @@ Thought:
 <thought>
 New Context:
 <new_context>
-```
 
-In addition, you have access to past experiences and memories in the form of Context, Action, Observation, Thought, and New Context.
-Use this information.
 
-Past memories similar to the current context:
+Here are some examples that you should base the completions on:
 ----------------
 Context:
 I am working on a project to create a website. I want to create a README.md file with the description of the website and I think that I am in the project's directory called "WebsitePersonal". I want to create a markdown file with the description of the website.
@@ -123,26 +86,13 @@ New Context:
 My task now is to update the linux packages on my server. I have successfully connected to the server. I can now update the packages on the server. I have to run the command "apt list --upgradable" to see the list of packages that can be updated. I can then run the command "sudo apt upgrade" to update the packages. I have to make sure that I update the security updates first. I can then upgrade the system to the new release '22.04.3 LTS' by running the command "do-release-upgrade".
 ----------------
 
-Your current context is following:
-My task is to update the packages on my Linux machine located at ls314.com. I have successfully connected to the server. There is a new release '22.04.3 LTS' available, and a system restart is required. I need to update the packages first using "apt list --upgradable" and then run "sudo apt upgrade" to update them. After updating the packages, I should perform the system upgrade by running "do-release-upgrade". Finally, I will need to restart
-Action:
-cmd ssh lukasz@ls314.com
+Context:
+I have to update the packages on my Linux machine. I am logged into the server at ls314.com using my username lukasz with key authentication. I have run the command to view the packages available for upgrade, and there are several packages, including important security updates. I have initiated the upgrade process by running "sudo apt upgrade -y." The command is currently asking for my password to proceed, indicating that my sudo configuration requires a password for administrative actions, despite my key authentication. I will enter
+Action: cmd sudo apt upgrade -y  
 Observation:
-lukasz@Smith:/mnt/c/Users/luki3/Projects/LS314/Projects/Surycate/SurycateBot/examples/context_prompting$ ssh lukasz@ls314.com
-Welcome to Ubuntu 20.04 LTS (GNU/Linux 5.4.0-33-generic x86_64)
+[sudo] password for lukasz:
 
- * Documentation:  https://help.ubuntu.com
- * Management:     https://landscape.canonical.com
-...
-
-New release '22.04.3 LTS' available.
-Run 'do-release-upgrade' to upgrade to it.
-
-
-*** System restart required ***
-Last login: Tue Aug 27 11:52:15 2024 from 192.41.114.228
-lukasz@ls314:~$ 
 Thought:
-I have successfully connected to the server at ls314.com. I can see that there is a new release '22.04.3 LTS' available and a system restart is required. I should update the packages and then perform the system upgrade.
+I need to provide my password to continue with the upgrade process, as the command requires administrative privileges. However, since I'm using key authentication, I shouldn't need to enter a password. This might indicate that my sudo configuration requires a password for this action. 
 New Context:
-My task is to update the packages on my Linux machine located at ls314.com. I have successfully connected to the server. There is a new release '22.04.3 LTS' available, and a system restart is required. I need to update the packages first using "apt list --upgradable" and then run "sudo apt upgrade" to update them. After updating the packages, I should perform the system upgrade by running "do-release-upgrade". Finally, I will need to restart
+I have to update the packages on my Linux machine. I am logged into the server at ls314.com using my username lukasz with key authentication. I have run the command to view the packages available for upgrade, and there are several packages, including important security updates. I have initiated the upgrade process by running "sudo apt upgrade -y." The command is currently asking for my password to proceed, indicating that my sudo configuration requires a password for administrative actions, despite my key authentication. I will enter
