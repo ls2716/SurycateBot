@@ -11,6 +11,21 @@ pip install -e .
 This will install the package in editable mode, so you can modify the code and
 see the changes immediately.
 
+Then, install the required packages:
+
+```bash
+pip install -r requirements.txt
+```
+
+Lastly, install the required nltk data within the python interpreter:
+
+```python
+import nltk
+nltk.download('punkt_eng')
+nltk.download('averaged_perceptron_tagger_eng')
+```
+
+
 ## Testing
 
 To run the tests, you can use the following command:
