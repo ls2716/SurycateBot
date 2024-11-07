@@ -11,6 +11,7 @@ venv/
 .vscode/settings.json
 examples/faiss_single_task/index.faiss
 examples/faiss_single_task/index.pkl
+surycate_venv/
 
 # Ignore data
 *.faiss
