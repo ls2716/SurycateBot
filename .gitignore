@@ -19,3 +19,6 @@ surycate_venv/
 
 # Ignore logs
 logs/
+
+# Ignore archive
+archive/
