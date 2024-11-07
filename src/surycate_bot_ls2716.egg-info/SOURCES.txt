@@ -4,9 +4,7 @@ pyproject.toml
 src/surycate_bot_ls2716/__init__.py
 src/surycate_bot_ls2716/actions.py
 src/surycate_bot_ls2716/llm.py
-src/surycate_bot_ls2716/main.py
 src/surycate_bot_ls2716/memory.py
-src/surycate_bot_ls2716/prompt.py
 src/surycate_bot_ls2716/shell.py
 src/surycate_bot_ls2716/tasks.py
 src/surycate_bot_ls2716/utils.py
@@ -14,4 +12,6 @@ src/surycate_bot_ls2716.egg-info/PKG-INFO
 src/surycate_bot_ls2716.egg-info/SOURCES.txt
 src/surycate_bot_ls2716.egg-info/dependency_links.txt
 src/surycate_bot_ls2716.egg-info/top_level.txt
-src/surycate_bot_ls2716/old/test.py
+src/surycate_bot_ls2716/archive/main.py
+src/surycate_bot_ls2716/archive/prompt.py
+src/surycate_bot_ls2716/archive/test.py

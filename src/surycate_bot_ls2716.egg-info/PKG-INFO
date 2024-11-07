@@ -2,7 +2,7 @@ Metadata-Version: 2.1
 Name: surycate_bot_ls2716
 Version: 0.0.1
 Summary: A small example package
-Author-email: Lukasz Sliwinski <s1640204@ed.ac.uk>
+Author-email: Lukasz Sliwinski <lukasz@ls314.com>
 Project-URL: Homepage, https://github.com/pypa/sampleproject
 Project-URL: Issues, https://github.com/pypa/sampleproject/issues
 Classifier: Programming Language :: Python :: 3

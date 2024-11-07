@@ -1,12 +1,6 @@
 """Implement shell and shell communication."""
-from subprocess import PIPE, Popen
-from threading import Thread
 import time
-from typing import Tuple
-import asyncio
-from queue import Queue
 import pexpect  # type: ignore
-import re
 import pyte  # type: ignore
 
 # Import the logging module
