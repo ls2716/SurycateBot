@@ -1,7 +1,7 @@
 import os
 import shutil
 import pytest
-import surycate_bot_ls2716.memory as memory
+import surycate_bot_ls2716.memory_faiss as memory_faiss
 
 
 # Define fixture which creates a path to the memory folder
@@ -15,7 +15,7 @@ def memory_path():
 
 def test_memory_init(memory_path):
     """Test the init method."""
-    mem = memory.MultiKeyMemory(memory_path, keys=["context", "observation"])
+    mem = memory_faiss.MultiKeyMemory(memory_path, keys=["context", "observation"])
     assert mem.memory_folder == memory_path
     assert mem.keys == ["context", "observation"]
     # Assert that there are 7 documents loaded
@@ -28,7 +28,7 @@ def test_memory_init(memory_path):
 def test_memory_fail(memory_path):
     """Test the init method."""
     with pytest.raises(ValueError):
-        mem = memory.MultiKeyMemory(
+        mem = memory_faiss.MultiKeyMemory(
             memory_path, keys=["context", "observation", "action"])
 
 # Define a memory fixture
@@ -36,7 +36,7 @@ def test_memory_fail(memory_path):
 
 @pytest.fixture(scope="module")
 def memory_fixture(memory_path):
-    mem = memory.MultiKeyMemory(memory_path, keys=["context", "observation"])
+    mem = memory_faiss.MultiKeyMemory(memory_path, keys=["context", "observation"])
     return mem
 
 

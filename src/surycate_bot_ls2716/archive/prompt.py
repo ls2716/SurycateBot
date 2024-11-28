@@ -77,14 +77,14 @@ def build_prompt(current_task: str, similar_tasks: list, task_context: str, hist
 
 
 if __name__ == "__main__":
-    import surycate_bot_ls2716.memory as memory
-    memory_src = memory.Memory("memories")
+    import surycate_bot_ls2716.memory_faiss as memory_faiss
+    memory_src = memory_faiss.Memory("memories")
     mems = memory_src.get_memories(
         "Who is the president of the United States?")
 
     current_task = 'Create a directory named "test".'
 
-    task_memory = memory.Memory("experiences")
+    task_memory = memory_faiss.Memory("experiences")
     tasks = task_memory.get_memories(current_task)
 
     current_task = "Create a directory named test"

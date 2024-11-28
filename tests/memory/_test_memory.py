@@ -1,7 +1,7 @@
 import os
 import shutil
 import pytest
-import surycate_bot_ls2716.memory as memory
+import surycate_bot_ls2716.memory_faiss as memory_faiss
 
 
 # Define fixture which creates a path to the memory folder
@@ -15,14 +15,14 @@ def memory_path():
 
 def test_memory_init(memory_path):
     """Test the initialisation of the memory."""
-    mem = memory.Memory(memory_path)
+    mem = memory_faiss.Memory(memory_path)
     assert len(mem.docs) == 2, "Correct number of documents loaded!"
 
 
 # Define fixture which creates a memory object
 @pytest.fixture(scope="module")
 def mem(memory_path):
-    mem = memory.Memory(memory_path)
+    mem = memory_faiss.Memory(memory_path)
     return mem
 
 
@@ -65,5 +65,5 @@ def index(temp_folder, mem):
 
 def test_load_index(memory_path, index):
     """Test loading the index."""
-    mem = memory.Memory(memory_path, db_filename=index)
+    mem = memory_faiss.Memory(memory_path, db_filename=index)
     assert len(mem.docs) == 2, "Not all documents were loaded!"

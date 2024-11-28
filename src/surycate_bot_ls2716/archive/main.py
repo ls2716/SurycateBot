@@ -4,7 +4,7 @@
 import surycate_bot_ls2716.utils as utils
 import surycate_bot_ls2716.actions as actions
 import surycate_bot_ls2716.prompt as prompt
-import surycate_bot_ls2716.memory as memory
+import surycate_bot_ls2716.memory_faiss as memory_faiss
 import surycate_bot_ls2716.tasks as tasks
 from surycate_bot_ls2716.llm import get_llm
 from surycate_bot_ls2716.shell import Shell
@@ -13,7 +13,7 @@ from surycate_bot_ls2716.shell import Shell
 logger = utils.get_logger(__name__)
 
 
-def loop(llm, experiences: memory.KeyValueMemory, task: tasks.Task, actions, state: dict):
+def loop(llm, experiences: memory_faiss.KeyValueMemory, task: tasks.Task, actions, state: dict):
     """Execute one task."""
 
     # Get the experiences related to the task
@@ -69,7 +69,7 @@ if __name__ == "__main__":
     # Set up an LLM
     llm = get_llm()
     # Set up the memory
-    mem = memory.KeyValueMemory('key_value_experiences')
+    mem = memory_faiss.KeyValueMemory('key_value_experiences')
     # Set a task
     task = tasks.Task('Create a folder named "hola" in the current directory',
                       'You are in the current directory and working on a project to create a website.')

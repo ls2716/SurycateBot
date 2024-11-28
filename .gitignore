@@ -22,3 +22,7 @@ logs/
 
 # Ignore archive
 archive/
+
+
+# Add memory md files
+mem_*.md

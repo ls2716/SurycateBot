@@ -3,7 +3,7 @@
 # Import the logging module
 import surycate_bot_ls2716.utils as utils
 import surycate_bot_ls2716.actions as actions
-import surycate_bot_ls2716.memory as memory
+import surycate_bot_ls2716.memory_faiss as memory_faiss
 from surycate_bot_ls2716.llm import get_llm
 from surycate_bot_ls2716.shell import PexpectShell
 import context_prompt as prompt
@@ -12,7 +12,7 @@ import context_prompt as prompt
 logger = utils.get_logger(__name__)
 
 
-def loop(context, llm, experiences: memory.KeyValueMemory, actions, state: dict):
+def loop(context, llm, experiences: memory_faiss.KeyValueMemory, actions, state: dict):
     """Execute one task."""
 
     history = "Action:\n"
@@ -73,7 +73,7 @@ if __name__ == "__main__":
     llm = get_llm()
     logger.debug("LLM set up")
     # Set up the memory
-    mem = memory.KeyValueMemory(
+    mem = memory_faiss.KeyValueMemory(
         'verbose_memory_by_context', db_filename='verbose_memory_faiss')
     logger.debug("Memory set up")
     # mem.save_index("verbose_memory_faiss")

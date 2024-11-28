@@ -4,7 +4,7 @@ import shutil
 
 
 import surycate_bot_ls2716.prompt as prompt
-import surycate_bot_ls2716.memory as memory
+import surycate_bot_ls2716.memory_faiss as memory_faiss
 import surycate_bot_ls2716.tasks as tasks
 
 
@@ -23,7 +23,7 @@ def memory_path():
 
 @pytest.fixture(scope="module")
 def mem(memory_path):
-    mem = memory.KeyValueMemory(memory_path)
+    mem = memory_faiss.KeyValueMemory(memory_path)
     return mem
 
 # Define a fixture which creates a task object

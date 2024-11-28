@@ -1,7 +1,7 @@
 import os
 import shutil
 import pytest
-import surycate_bot_ls2716.memory as memory
+import surycate_bot_ls2716.memory_faiss as memory_faiss
 
 
 # Define fixture which creates a path to the memory folder
@@ -15,7 +15,7 @@ def memory_path():
 
 def test_memory_init(memory_path):
     """Test the initialisation of the memory."""
-    mem = memory.KeyValueMemory(memory_path)
+    mem = memory_faiss.KeyValueMemory(memory_path)
     assert len(mem.key_docs) == 2, "Not all key documents were loaded!"
     assert len(mem.value_docs) == 2, "Not all value documents were loaded!"
     # Check that dictionaries are correctly linked
@@ -47,7 +47,7 @@ Action: EXIT"""
 
 @pytest.fixture(scope="module")
 def mem(memory_path):
-    mem = memory.KeyValueMemory(memory_path)
+    mem = memory_faiss.KeyValueMemory(memory_path)
     return mem
 
 
@@ -118,5 +118,5 @@ def index(temp_folder, mem):
 
 def test_load_index(memory_path, index):
     """Test loading the index."""
-    mem = memory.KeyValueMemory(memory_path, db_filename=index)
+    mem = memory_faiss.KeyValueMemory(memory_path, db_filename=index)
     assert len(mem.key_docs) == 2, "Not all documents were loaded!"
