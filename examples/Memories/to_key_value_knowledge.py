@@ -53,7 +53,7 @@ def main():
 
 
     # Iterate through all memories and create key files
-    for i, filename in enumerate(get_filenames('memories')):
+    for i, filename in enumerate(get_filenames('knowledge')):
         print(f'Processing {filename} ... ', end='')
         memory = read_memory(filename)
         key_context = format_memory(memory, template=context_template)
