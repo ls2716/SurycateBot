@@ -4,7 +4,8 @@ pyproject.toml
 src/surycate_bot_ls2716/__init__.py
 src/surycate_bot_ls2716/actions.py
 src/surycate_bot_ls2716/llm.py
-src/surycate_bot_ls2716/memory.py
+src/surycate_bot_ls2716/memory_chroma.py
+src/surycate_bot_ls2716/memory_faiss.py
 src/surycate_bot_ls2716/shell.py
 src/surycate_bot_ls2716/tasks.py
 src/surycate_bot_ls2716/utils.py
