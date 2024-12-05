@@ -10,7 +10,15 @@ def memory_path():
     path = os.path.abspath(__file__)
     path = os.path.dirname(path)
     memory_path = os.path.join(path, "multi_key_memories")
-    return memory_path
+    # Clear the faiss index directory if it exists from the memory_path
+    yield memory_path
+    to_delete = [f for f in os.listdir(memory_path) if f.startswith("faiss")]
+    for f in to_delete:
+        shutil.rmtree(os.path.join(memory_path, f))
+    # Clear the memory_dict.yaml file if it exists from the memory_path
+    if os.path.exists(os.path.join(memory_path, "memory_dict.yaml")):
+        os.remove(os.path.join(memory_path, "memory_dict.yaml"))
+    
 
 @pytest.fixture(scope="module")
 def embeddings():
