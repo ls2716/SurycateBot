@@ -49,7 +49,7 @@ requests==2.32.3
 requests-toolbelt==1.0.0
 sniffio==1.3.1
 SQLAlchemy==2.0.35
--e git+https://github.com/ls2716/SurycateBot.git@92edd42ad83fb3fdee32fcf589eed634388f2b8d#egg=surycate_bot_ls2716
+-e git+https://github.com/ls2716/SurycateBot.git@5489109ba3749b825838fe3164137cf09ddaae92#egg=surycate_bot_ls2716
 tenacity==9.0.0
 tiktoken==0.8.0
 tqdm==4.67.1
