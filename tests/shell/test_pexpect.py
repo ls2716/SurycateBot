@@ -99,7 +99,7 @@ def test_timeout(bash):
     print(output)
     assert output[0].endswith("sleep 0.5")
     assert output[1].endswith("$ ")
-    assert output[1].startswith("lukasz")
+    assert output[1].find("SurycateBot") != -1
 
 
 def test_line_cut(bash):
