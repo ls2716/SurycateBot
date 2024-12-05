@@ -26,3 +26,4 @@ archive/
 
 # Add memory md files
 mem_*.md
+tests/memory/multi_key_memories/memory_dict.yaml
