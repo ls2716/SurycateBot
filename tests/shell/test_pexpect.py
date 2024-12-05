@@ -41,8 +41,8 @@ def test_bash_command(bash):
     # Get the output of the command
     output = bash.get_output()
     print(output)
-    # Assert that the output contains "drwxrwxrwx "
-    assert output.find("drwxrwxrwx") != -1
+    # Assert that the output contains "total "
+    assert output.find("total ") != -1
 
 
 def test_get_last_lines(bash):

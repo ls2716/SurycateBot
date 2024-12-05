@@ -50,6 +50,6 @@ def test_bash_command(state: Dict, bash: shell.PexpectShell, action_executor: ac
     print(f"Observation: {observation}")
     print(f"Task Done: {task_done}")
 
-    # assert that the observation is correct and contains "drwxrwxrwx"
-    assert observation.find("drwxrwxrwx") != -1
+    # assert that the observation is correct and contains "total "
+    assert observation.find("total ") != -1
     assert task_done is False

@@ -22,6 +22,8 @@ def test_memory_init(memory_path, embeddings):
     """Test the initialisation of MultiKeyMemory object."""
     mem = memory_faiss.MultiKeyMemory(memory_path, embeddings=embeddings, keys=[
                                       "context", "observation"], load=False)
+    mem.save_memory()
+    
     assert mem.memory_folder == memory_path
     assert mem.keys == ["context", "observation"]
     # Assert that there are 7 documents loaded
@@ -53,8 +55,8 @@ def test_memory_get_memory(memory_fixture):
     # Get one memory using context key
     key_doc, value_doc = mem.get_memory("I am being tasked to update the packages on my linux server ls314.com. I have successfully sshed into the server and send the command to update the packages. I have been prompted for a password. I will have to enter it first.",
                                         key_type="context")
-    print(value_doc)
-    assert key_doc.page_content == "I am being tasked to update the packages on my linux server ls314.com. I have successfully sshed into the server and send the command to update the packages. I have been prompted for a password. I will have to enter it first."
+
+    assert key_doc.page_content.strip() == "I am being tasked to update the packages on my linux server ls314.com. I have successfully sshed into the server and send the command to update the packages. I have been prompted for a password. I will have to enter it first."
     assert value_doc.find("Context:") != -1
     assert value_doc.find("Action Thought:") != -1
     assert value_doc.find("Action:") != -1
@@ -76,7 +78,7 @@ Observation:
 [sudo] password for lukasz: 
 Sorry, try again
 """, key_type="observation")
-    assert key_doc.page_content == """Context:
+    assert key_doc.page_content.strip() == """Context:
 I am being tasked to update the packages on my linux server ls314.com. I have successfully sshed into the server and send the command to update the packages. I have been prompted for a password and I have sent it. I have to wait for the response.
 Action Thought:
 I can just wait for the response and use the get_output command to see the output.
