@@ -24,10 +24,10 @@ jobs:
       with:
         python-version: "3.12"
     - name: Use Secret as Env Var
-      run: echo "The secret is set as an environment variable"
-      env:
-        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-
+      run: |
+        echo "The secret is set as an environment variable"
+        OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
+        export OPENAI_API_KEY
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
