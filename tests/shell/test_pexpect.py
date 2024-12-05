@@ -53,8 +53,8 @@ def test_get_last_lines(bash):
     # Get the last 2 lines of the output
     output = bash.get_last_lines(2)
     print(output)
-    # Assert that the output contains "drwxrwxrwx "
-    assert output.find("rwxrwx") != -1
+    # Assert that the output contains "/SurycateBot/"
+    assert output.find("/SurycateBot") != -1
     assert len(output.split("\n")) == 2
     assert output.find("total") == -1
 
