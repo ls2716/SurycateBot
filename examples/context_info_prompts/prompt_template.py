@@ -14,12 +14,12 @@ logger = utils.get_logger(__name__)
 
 def format_memories(memories: List) -> str:
     """Format the memories."""
-    return "\n".join('- ' + memory.page_content for memory in memories)
+    return "\n".join('- ' + memory for memory in memories)
 
 
 def format_similar_tasks(similar_tasks: List) -> str:
     """Format the similar tasks."""
-    return "\n----------------\n".join(similar_task.page_content for similar_task in similar_tasks)
+    return "\n----------------\n".join(similar_task for similar_task in similar_tasks)
 
 
 def build_prompt(similar_tasks: list, execution: str) -> str:

@@ -5,6 +5,7 @@ import surycate_bot_ls2716.memory_faiss as memory_faiss
 from surycate_bot_ls2716.llm import get_llm
 from surycate_bot_ls2716.shell import PexpectShell
 from prompt_template import build_prompt, context_info_template
+from langchain_openai import OpenAIEmbeddings
 
 # Import the command line arguments utility argparse
 import argparse
@@ -52,7 +53,7 @@ def loop(context, llm, knowledge: memory_faiss.MultiKeyMemory, experiences: memo
         # STEP 2: Get the similar experiences from the experience memory based on context and information
         # First add the information to the execution
         execution += "INFORMATION:\n" + \
-            "\n".join(f"- {info.page_content}" for info in context_info)
+            "\n".join(f"- {info}" for info in context_info)
         print_execution(execution)
         # Get the similar experiences
         _, similar_experiences = experiences.get_memories(
@@ -127,7 +128,7 @@ if __name__ == "__main__":
     task_name = args.task_name
 
     # Get the starting context
-    with open(f"tasks/{task_name}.txt", "r") as f:
+    with open(f"{task_name}", "r") as f:
         context = f.read().strip()
     logger.debug(f"Starting context: {context}")
     input("Is the starting context ok? [y]")
@@ -138,12 +139,12 @@ if __name__ == "__main__":
 
     # Set up the experiences memory
     experiences = memory_faiss.MultiKeyMemory(
-        'experiences', keys=["context", "observation"], try_load=True)
+        'experiences', keys=["context", "observation"], embeddings=OpenAIEmbeddings(), load=False)
     logger.debug("Experiences set up")
 
     # Set up the knowledge memory
     knowledge = memory_faiss.MultiKeyMemory(
-        'memories', keys=["context"], try_load=True)
+        'memories', keys=["context"], embeddings=OpenAIEmbeddings(), load=False)
 
     # Set up actions
     actions = actions.ActionExecutor(action_set=actions.DEFAULT_ACTION_SET)
