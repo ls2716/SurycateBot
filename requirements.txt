@@ -3,12 +3,15 @@ aiohttp==3.11.8
 aiosignal==1.3.1
 annotated-types==0.7.0
 anyio==4.6.2.post1
+astroid==3.3.5
 attrs==24.2.0
 certifi==2024.8.30
 charset-normalizer==3.4.0
 dataclasses-json==0.6.7
+dill==0.3.9
 distro==1.9.0
 faiss-cpu==1.9.0.post1
+flake8==7.1.1
 frozenlist==1.5.0
 greenlet==3.1.1
 h11==0.14.0
@@ -17,6 +20,7 @@ httpx==0.28.0
 httpx-sse==0.4.0
 idna==3.10
 iniconfig==2.0.0
+isort==5.13.2
 jiter==0.8.0
 jsonpatch==1.33
 jsonpointer==3.0.0
@@ -27,6 +31,7 @@ langchain-openai==0.2.10
 langchain-text-splitters==0.3.2
 langsmith==0.1.147
 marshmallow==3.23.1
+mccabe==0.7.0
 multidict==6.1.0
 mypy-extensions==1.0.0
 numpy==1.26.4
@@ -34,12 +39,16 @@ openai==1.55.3
 orjson==3.10.12
 packaging==24.2
 pexpect==4.9.0
+platformdirs==4.3.6
 pluggy==1.5.0
 propcache==0.2.0
 ptyprocess==0.7.0
+pycodestyle==2.12.1
 pydantic==2.10.2
 pydantic-settings==2.6.1
 pydantic_core==2.27.1
+pyflakes==3.2.0
+pylint==3.3.2
 pyte==0.8.2
 pytest==8.3.3
 python-dotenv==1.0.1
@@ -49,9 +58,10 @@ requests==2.32.3
 requests-toolbelt==1.0.0
 sniffio==1.3.1
 SQLAlchemy==2.0.35
--e git+https://github.com/ls2716/SurycateBot.git@main
+-e git+https://github.com/ls2716/SurycateBot.git@main#egg=surycate_bot_ls2716
 tenacity==9.0.0
 tiktoken==0.8.0
+tomlkit==0.13.2
 tqdm==4.67.1
 typing-inspect==0.9.0
 typing_extensions==4.12.2
