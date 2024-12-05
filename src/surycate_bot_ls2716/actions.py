@@ -1,12 +1,11 @@
 """Implement actions for the bot."""
-from typing import List, Tuple, Dict, Callable
-
-from datetime import datetime
 import shlex  # For splitting the command into a list of arguments
+from datetime import datetime
+from typing import Callable, Dict, List, Tuple
 
+import surycate_bot_ls2716.shell as shell_lib
 # Import the logging module
 import surycate_bot_ls2716.utils as utils
-import surycate_bot_ls2716.shell as shell_lib
 
 # Set the logger
 logger = utils.get_logger(__name__)

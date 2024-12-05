@@ -1,6 +1,7 @@
-import pytest
 import os
 import shutil
+
+import pytest
 
 import surycate_bot_ls2716.tasks as tasks
 

@@ -1,8 +1,11 @@
 import os
 import shutil
+
 import pytest
+from langchain_openai import OpenAIEmbeddings  # type: ignore
+
 import surycate_bot_ls2716.memory_faiss as memory_faiss
-from langchain_openai import OpenAIEmbeddings # type: ignore
+
 
 @pytest.fixture(scope="module")
 def memory_path():
@@ -18,7 +21,7 @@ def memory_path():
     # Clear the memory_dict.yaml file if it exists from the memory_path
     if os.path.exists(os.path.join(memory_path, "memory_dict.yaml")):
         os.remove(os.path.join(memory_path, "memory_dict.yaml"))
-    
+
 
 @pytest.fixture(scope="module")
 def embeddings():
@@ -28,10 +31,11 @@ def embeddings():
 
 def test_memory_init(memory_path, embeddings):
     """Test the initialisation of MultiKeyMemory object."""
-    mem = memory_faiss.MultiKeyMemory(memory_path, embeddings=embeddings, keys=[
-                                      "context", "observation"], load=False)
+    mem = memory_faiss.MultiKeyMemory(memory_path, embeddings=embeddings,
+                                      keys=["context", "observation"],
+                                      load=False)
     mem.save_memory()
-    
+
     assert mem.memory_folder == memory_path
     assert mem.keys == ["context", "observation"]
     # Assert that there are 7 documents loaded
@@ -46,8 +50,9 @@ def test_memory_init(memory_path, embeddings):
 def test_memory_fail(memory_path, embeddings):
     """Test the failure of the initialisation of MultiKeyMemory object."""
     with pytest.raises(ValueError):
-        mem = memory_faiss.MultiKeyMemory(
+        _ = memory_faiss.MultiKeyMemory(
             memory_path, embeddings=embeddings, keys=["context", "observation", "action"])
+
 
 @pytest.fixture(scope="module")
 def memory_fixture(memory_path, embeddings):
@@ -86,6 +91,7 @@ Observation:
 [sudo] password for lukasz: 
 Sorry, try again
 """, key_type="observation")
+    print(key_doc.page_content)
     assert key_doc.page_content.strip() == """Context:
 I am being tasked to update the packages on my linux server ls314.com. I have successfully sshed into the server and send the command to update the packages. I have been prompted for a password and I have sent it. I have to wait for the response.
 Action Thought:
@@ -102,14 +108,16 @@ Sorry, try again"""
     assert value_doc.find("Observation Thought:") != -1
     assert value_doc.find("New Context:") != -1
     assert value_doc.find(
-        "I got the output now and it looks like the password is incorrect.") != -1
+        "I got the output now and it looks like the password is incorrect."
+    ) != -1
     assert key_doc.page_content.find("Observation:") != -1
 
 
 def test_get_memories(memory_fixture):
     """Test the get memories method of MultiKeyMemory object."""
-    key_docs, value_docs = memory_fixture.get_memories("I am being tasked to update the packages on my linux server ls314.com. I am on local machine.",
-                                                       key_type="context")
+    key_docs, value_docs = memory_fixture.get_memories(
+        "I am being tasked to update the packages on my linux server "
+        + "ls314.com. I am on local machine.", key_type="context")
     assert len(key_docs) == 3
     assert len(value_docs) == 3
     assert key_docs[0].page_content.find("Context:") == -1

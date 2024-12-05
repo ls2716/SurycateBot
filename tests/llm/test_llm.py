@@ -1,5 +1,4 @@
 import pytest
-import os
 
 from surycate_bot_ls2716.llm import get_llm
 

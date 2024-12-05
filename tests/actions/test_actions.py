@@ -1,5 +1,6 @@
+from typing import Dict
+
 import pytest
-from typing import Dict, List
 
 import surycate_bot_ls2716.actions as actions
 import surycate_bot_ls2716.shell as shell
@@ -40,7 +41,8 @@ def bash():
     shell_obj.close()
 
 
-def test_bash_command(state: Dict, bash: shell.PexpectShell, action_executor: actions.ActionExecutor):
+def test_bash_command(state: Dict, bash: shell.PexpectShell,
+                      action_executor: actions.ActionExecutor):
     # Test successful bash command
     action = 'cmd ls -la'
     state['shell'] = bash

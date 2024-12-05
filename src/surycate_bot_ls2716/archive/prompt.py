@@ -1,8 +1,8 @@
 """This script defines the prompt for the bot."""
 # Import the prompt template from langchain
-from langchain.prompts.prompt import PromptTemplate
 from typing import List
 
+from langchain.prompts.prompt import PromptTemplate
 
 # Import the logging module
 import surycate_bot_ls2716.utils as utils

@@ -1,9 +1,9 @@
 """Test shell commands"""
-import time
+import io
+
 import pytest
 
 from surycate_bot_ls2716.shell import PexpectShell
-import io
 
 
 def print_to_string(*args, **kwargs):
@@ -27,15 +27,15 @@ def test_pexpectshell_initialisation():
 def bash():
     """Open a shell process"""
     shell = PexpectShell()
-    output = shell.get_output()
+    _ = shell.get_output()
     yield shell
     # Close the shell process
     shell.close()
 
 
 def test_bash_command(bash):
-    """Test a bash command "ll" that should return a list of files and directories
-    in the current directory."""
+    """Test a bash command "ll" that should return a list of files
+    and directories in the current directory."""
     # Send the command
     bash.send_command("ls -al")
     # Get the output of the command
@@ -105,7 +105,10 @@ def test_timeout(bash):
 def test_line_cut(bash):
     """Test that the maximum number of lines is 14."""
     # Execute the command and get the output
-    output = bash.execute_command('echo "line 1\nline 2\nline 3\nline 4\nline 5\nline 6\nline 7\nline 8\nline 9\nline 10\nline 11\nline 12\nline 13\nline 14\nline 15"')
+    output = bash.execute_command(
+        'echo "line 1\nline 2\nline 3\nline 4\nline 5\nline 6\n'
+        + 'line 7\nline 8\nline 9\nline 10\nline 11\nline 12\n'
+        + 'line 13\nline 14\nline 15"')
     # Assert the output contains what is expected
     assert output.find("line 1") != -1
     assert output.find("line 15") != -1

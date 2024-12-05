@@ -2,33 +2,36 @@
 
 This file specifies two memory classes: Memory and KeyValueMemory.
 
-Memory class is used to store memories in a folder and perform similarity search on them.
-The Memory searches by the whole content of the document.
+Memory class is used to store memories in a folder and perform similarity
+search based on the provided key.
 
 KeyValueMemory class is used to store key-value pairs in a folder
 and perform similarity search on the keys.
-This is implemented so that the content of the document does not affect the similarity search.
-For example, if we want to search similar tasks as the current task, we only care about
-the task and optionally the context but not the whole execution experience which is not
-relevant for the similarity search.
+This is implemented so that the content of the document does not affect
+the similarity search. For example, if we want to search similar tasks
+as the current task,  we only care about the task and optionally the context
+but not the whole execution experience which is notrelevant for the similarity
+search.
 
 """
+import os
+from pathlib import Path
+from typing import List
+
+import yaml
+from langchain_community.document_loaders import DirectoryLoader, TextLoader
+from langchain_community.vectorstores import FAISS
+from langchain_openai import OpenAIEmbeddings  # type: ignore
+
 import surycate_bot_ls2716.utils as utils
+
 # Set the logger
 logger = utils.get_logger(__name__)
 logger.setLevel("DEBUG")
 logger.debug("Logger set up.")
 
-from langchain_openai import OpenAIEmbeddings # type: ignore
 logger.debug("Imported OpenAIEmbeddings.")
-from langchain_community.vectorstores import FAISS
-from langchain_community.document_loaders import TextLoader
 logger.debug("Imported FAISS.")
-from pathlib import Path
-from langchain_community.document_loaders import DirectoryLoader
-from typing import List
-import os
-import yaml
 # import msgpack
 
 
@@ -64,12 +67,11 @@ class MultiKeyMemory(object):
         # Raise an error if the keys are not unique
         if len(keys) != len(set(keys)):
             raise ValueError("Keys should be unique.")
-        
+
         if load:
             self.load_memory()
         else:
             self.create_memory()
-        
 
     def create_memory(self):
         # Get the key folders
@@ -90,8 +92,10 @@ class MultiKeyMemory(object):
         filenames = os.listdir(key_folders[0])
         # The filenames are of the form memory_<number>.md
         # Parse the memory numbers
-        memory_numbers = [int(filename.split("_")[1].split(".")[0])
-                          for filename in filenames if filename.endswith(".md")]
+        memory_numbers = [
+            int(filename.split("_")[1].split(".")[0])
+            for filename in filenames if filename.endswith(".md")
+        ]
         # Get the maximum memory number
         self.id = max(memory_numbers)
         # Load the keys
@@ -99,7 +103,8 @@ class MultiKeyMemory(object):
         # For each key, create a FAISS index
         self.faiss_dict = {}
         for key in self.keys:
-            loader = DirectoryLoader(key_folder_dict[key], glob="*.md", loader_cls=TextLoader)
+            loader = DirectoryLoader(
+                key_folder_dict[key], glob="*.md", loader_cls=TextLoader)
             docs = loader.load()
             self.key_doc_dict[key] = {}
             for doc in docs:
@@ -115,7 +120,8 @@ class MultiKeyMemory(object):
             logger.debug(f"Created key {key}")
         # Load value dicts
         self.value_dict = {}
-        value_loader = DirectoryLoader(value_folder, glob="*.md", loader_cls=TextLoader)
+        value_loader = DirectoryLoader(
+            value_folder, glob="*.md", loader_cls=TextLoader)
         value_docs = value_loader.load()
         for doc in value_docs:
             # Get filename from the source
@@ -125,7 +131,6 @@ class MultiKeyMemory(object):
                 filename.split("_")[1].split(".")[0])
             doc.metadata["value_id"] = memory_number
             self.value_dict[memory_number] = doc.page_content
-        
 
     def load_memory(self):
         """Load the memory from json and faiss indices."""
@@ -142,7 +147,7 @@ class MultiKeyMemory(object):
             logger.error(e)
             raise ValueError(
                 "Could not load the index from the file. Create a new index.")
-        
+
         # Load the value dictionary from json
         data_dict_path = os.path.join(self.memory_folder, "memory_dict.yaml")
         with open(data_dict_path, "r") as f:
@@ -164,7 +169,6 @@ class MultiKeyMemory(object):
             self.faiss_dict[key].save_local(
                 os.path.join(self.memory_folder, f"faiss_{key}"))
 
-
     def get_memory(self, query: str, key_type: str):
         """Get the memory value for the key."""
         # Check if key_type is in keys
@@ -173,7 +177,7 @@ class MultiKeyMemory(object):
                 f"Key type {key_type} not in keys {self.keys}.")
         # Get the key
         key_doc = self.faiss_dict[key_type].similarity_search(query, k=1)[0]
-        key_id = key_doc.metadata["key_id"] #
+        key_id = key_doc.metadata["key_id"]
         # Get the value
         value_doc = self.value_dict[key_id]
         return key_doc, value_doc
@@ -193,8 +197,9 @@ class MultiKeyMemory(object):
         return key_docs, value_docs
 
 
-if __name__=="__main__":
+if __name__ == "__main__":
     memory_folder = "tests/memory/multi_key_memories"
-    mem = MultiKeyMemory(memory_folder, keys=["context", "observation"], load=False,
-                          embeddings=OpenAIEmbeddings())
+    mem = MultiKeyMemory(memory_folder, keys=["context", "observation"],
+                         load=False,
+                         embeddings=OpenAIEmbeddings())
     mem.save_memory()

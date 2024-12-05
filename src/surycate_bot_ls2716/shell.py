@@ -1,5 +1,6 @@
 """Implement shell and shell communication."""
 import time
+
 import pexpect  # type: ignore
 import pyte  # type: ignore
 
@@ -9,38 +10,43 @@ import surycate_bot_ls2716.utils as utils
 # Set the logger
 logger = utils.get_logger(__name__)
 
+
 class PexpectShell(object):
-    """Pexpect shell object
+    """Pexpect shell object.
 
     How does the PexpectShell work?
-    The purpose of the Pexpect shell is to interact with the shell using the pexpect library.
+    The purpose of the Pexpect shell is to interact with the shell
+    using the pexpect library.
 
-    The PexpectShell is initialised by creating a child process using the pexpect.spawn() function
-    with the 'bash' command as an argument. The child process is stored in the self.child attribute.
+    The PexpectShell is initialised by creating a child process
+    using the pexpect.spawn() function with the 'bash' command as the
+    argument. The child process is stored in the self.child attribute.
 
     There are following methods to interact with the PexpectShell object:
     - send_command: Sends a command to the shell.
-        This method sends a command to the shell using the sendline() method of the self.child object.
-        It does not return anything.
+        This method sends a command to the shell using the sendline() method
+         of the self.child object. It does not return anything.
     - get_output: Gets the output from the shell.
-        This method gets the current output from the shell. It works as follows.
-        It uses the expect() method of the self.child object to wait for the shell prompt.
-        Either the expect returns a prompt sign \$ or a timeout.
+        This method gets the current output from the shell.
+        It works as follows:
+        It uses the expect() method of the self.child object to wait
+          for the shell prompt.
+        Either the expect returns a prompt sign $ or a timeout.
         If the prompt is returned, the output is decoded and returned.
-        If the timeout is returned, the output is decoded and returned but there
-        is a check that the output does not contain half of the line.
+        If the timeout is returned, the output is decoded and returned
+        but there is a check that the output does not contain half of the line.
         The output is decoded using the _decode_output() method.
         The timeouted output is cleared using the clear_buffers() method and
         the output is returned with a code 1 to mark a timeout.
     - get_last_lines: Gets the last lines of the output.
         This method returns the last n lines of the output.
     - execute_command: Executes a command.
-        This method sends a command to the shell using the send_command() method and
-        waits for the output using the get_output() method.
+        This method sends a command to the shell using the send_command()
+        method and waits for the output using the get_output() method.
     - close: Closes the shell.
 
-    The shell also aggregates the output so that at any time the output can be retrieved.
-
+    The shell also aggregates the output so that at any time the output can be
+    retrieved.
     """
 
     def __init__(self, command_timeout: float = 2.) -> None:
@@ -104,8 +110,9 @@ class PexpectShell(object):
         self.child._before = self.child.buffer_type()
         # Compute the returned output by assembling the output lines
         returned_output_lines = [self.terminal_content[-1] + output_lines[0]]
-        if len(output_lines) > 14: # If the output is too long cut it
-            returned_output_lines += output_lines[1:5] + ['...'] + output_lines[-8:]
+        if len(output_lines) > 14:  # If the output is too long cut it
+            returned_output_lines += output_lines[1:5] + \
+                ['...'] + output_lines[-8:]
         else:
             returned_output_lines += output_lines[1:]
         # Append the output to the last line of terminal content
@@ -117,7 +124,8 @@ class PexpectShell(object):
         self.terminal_content += output_lines[1:]
         # Assemble the output from the returned output lines
         returned_output = '\n'.join(returned_output_lines)
-        # Add a space at the end of the terminal content if it ends with a prompt
+        # Add a space at the end of the terminal content if it ends with a
+        # prompt
         if returned_output.endswith('$'):
             self.terminal_content[-1] += ' '
             returned_output += ' '
@@ -142,7 +150,8 @@ class PexpectShell(object):
     def execute_command(self, command: str, command_time=0.1) -> str:
         """Execute a command.
 
-        Uses the send_command and get_output methods to execute a command and get the output.
+        Uses the send_command and get_output methods to execute a command and
+        get the output.
 
         Arguments:
         - command (str): The command to execute.

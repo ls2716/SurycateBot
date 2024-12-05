@@ -1,11 +1,11 @@
 """Execution of the bot"""
 
 # Import the logging module
-import surycate_bot_ls2716.utils as utils
 import surycate_bot_ls2716.actions as actions
-import surycate_bot_ls2716.prompt as prompt
 import surycate_bot_ls2716.memory_faiss as memory_faiss
+import surycate_bot_ls2716.prompt as prompt
 import surycate_bot_ls2716.tasks as tasks
+import surycate_bot_ls2716.utils as utils
 from surycate_bot_ls2716.llm import get_llm
 from surycate_bot_ls2716.shell import Shell
 
