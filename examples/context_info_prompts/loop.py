@@ -5,7 +5,7 @@ import surycate_bot_ls2716.memory_faiss as memory_faiss
 from surycate_bot_ls2716.llm import get_llm
 from surycate_bot_ls2716.shell import PexpectShell
 from prompt_template import build_prompt, context_info_template
-from langchain_openai import OpenAIEmbeddings
+from langchain_openai import OpenAIEmbeddings # type: ignore
 
 # Import the command line arguments utility argparse
 import argparse
