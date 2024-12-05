@@ -1,4 +1,5 @@
 """Test shell commands"""
+
 import io
 
 import pytest
@@ -87,15 +88,15 @@ def test_timeout(bash):
     print(output)
     assert output.find("sleep 0.5") != -1
     assert output.split("\n")[-1] == ""
-    bash.command_timeout = 1.
+    bash.command_timeout = 1.0
     output = bash.get_output()
-    print('---')
+    print("---")
     print(output)
     assert output.endswith("$ ")
     assert output.find("sleep 0.5") == -1
     # Get the last two lines of the output
     output = bash.get_last_lines(2).split("\n")
-    print('---')
+    print("---")
     print(output)
     assert output[0].endswith("sleep 0.5")
     assert output[1].endswith("$ ")
@@ -107,8 +108,9 @@ def test_line_cut(bash):
     # Execute the command and get the output
     output = bash.execute_command(
         'echo "line 1\nline 2\nline 3\nline 4\nline 5\nline 6\n'
-        + 'line 7\nline 8\nline 9\nline 10\nline 11\nline 12\n'
-        + 'line 13\nline 14\nline 15"')
+        + "line 7\nline 8\nline 9\nline 10\nline 11\nline 12\n"
+        + 'line 13\nline 14\nline 15"'
+    )
     # Assert the output contains what is expected
     assert output.find("line 1") != -1
     assert output.find("line 15") != -1
@@ -121,4 +123,4 @@ def test_line_cut(bash):
     print(output)
     # Assert the output is right
     assert len(output.split("\n")) == 17
-    assert output.startswith('> line 15')
+    assert output.startswith("> line 15")

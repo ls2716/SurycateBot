@@ -14,6 +14,7 @@ but not the whole execution experience which is notrelevant for the similarity
 search.
 
 """
+
 import os
 from pathlib import Path
 from typing import List
@@ -38,8 +39,9 @@ logger.debug("Imported FAISS.")
 class MultiKeyMemory(object):
     """MultiKeyMemory class."""
 
-    def __init__(self, memory_folder: str, keys: List[str],
-                 embeddings, load=False) -> None:
+    def __init__(
+        self, memory_folder: str, keys: List[str], embeddings, load=False
+    ) -> None:
         """Initialize the MultiKeyMemory class.
 
         Args:
@@ -75,15 +77,16 @@ class MultiKeyMemory(object):
 
     def create_memory(self):
         # Get the key folders
-        key_folders = [os.path.join(
-            self.memory_folder, f'keys_{key}') for key in self.keys]
+        key_folders = [
+            os.path.join(self.memory_folder, f"keys_{key}") for key in self.keys
+        ]
         logger.debug(f"Key folders: {key_folders}")
         key_folder_dict = dict(zip(self.keys, key_folders))
         # Raise an error if the key folders do not exist
         if not all(os.path.exists(key_folder) for key_folder in key_folders):
             raise ValueError("Key folders do not exist.")
 
-        value_folder = os.path.join(self.memory_folder, 'values')
+        value_folder = os.path.join(self.memory_folder, "values")
         # Raise an error if the value folder does not exist
         if not os.path.exists(value_folder):
             raise ValueError("Value folder does not exist.")
@@ -94,7 +97,8 @@ class MultiKeyMemory(object):
         # Parse the memory numbers
         memory_numbers = [
             int(filename.split("_")[1].split(".")[0])
-            for filename in filenames if filename.endswith(".md")
+            for filename in filenames
+            if filename.endswith(".md")
         ]
         # Get the maximum memory number
         self.id = max(memory_numbers)
@@ -104,15 +108,15 @@ class MultiKeyMemory(object):
         self.faiss_dict = {}
         for key in self.keys:
             loader = DirectoryLoader(
-                key_folder_dict[key], glob="*.md", loader_cls=TextLoader)
+                key_folder_dict[key], glob="*.md", loader_cls=TextLoader
+            )
             docs = loader.load()
             self.key_doc_dict[key] = {}
             for doc in docs:
                 # Get filename from the source
                 filename = Path(doc.metadata["source"]).name
                 # Get the memory number from the path
-                memory_number = int(
-                    filename.split("_")[1].split(".")[0])
+                memory_number = int(filename.split("_")[1].split(".")[0])
                 doc.metadata["key_id"] = memory_number
                 self.key_doc_dict[key][memory_number] = doc.page_content
 
@@ -120,15 +124,13 @@ class MultiKeyMemory(object):
             logger.debug(f"Created key {key}")
         # Load value dicts
         self.value_dict = {}
-        value_loader = DirectoryLoader(
-            value_folder, glob="*.md", loader_cls=TextLoader)
+        value_loader = DirectoryLoader(value_folder, glob="*.md", loader_cls=TextLoader)
         value_docs = value_loader.load()
         for doc in value_docs:
             # Get filename from the source
             filename = Path(doc.metadata["source"]).name
             # Get the memory number from the path
-            memory_number = int(
-                filename.split("_")[1].split(".")[0])
+            memory_number = int(filename.split("_")[1].split(".")[0])
             doc.metadata["value_id"] = memory_number
             self.value_dict[memory_number] = doc.page_content
 
@@ -141,12 +143,14 @@ class MultiKeyMemory(object):
                 self.faiss_dict[key] = FAISS.load_local(
                     os.path.join(self.memory_folder, f"faiss_{key}"),
                     self.embeddings,
-                    allow_dangerous_deserialization=True)
+                    allow_dangerous_deserialization=True,
+                )
                 logger.debug(f"Loaded index for key {key}.")
         except Exception as e:
             logger.error(e)
             raise ValueError(
-                "Could not load the index from the file. Create a new index.")
+                "Could not load the index from the file. Create a new index."
+            )
 
         # Load the value dictionary from json
         data_dict_path = os.path.join(self.memory_folder, "memory_dict.yaml")
@@ -158,8 +162,7 @@ class MultiKeyMemory(object):
     def save_memory(self):
         """Save the memory to json and faiss indices."""
         # Save the value dictionary to json
-        data_dict = {"value_dict": self.value_dict,
-                     "key_doc_dict": self.key_doc_dict}
+        data_dict = {"value_dict": self.value_dict, "key_doc_dict": self.key_doc_dict}
         data_dict_path = os.path.join(self.memory_folder, "memory_dict.yaml")
         with open(data_dict_path, "w") as f:
             yaml.dump(data_dict, f)
@@ -167,14 +170,14 @@ class MultiKeyMemory(object):
         # Save the FAISS indices
         for key in self.keys:
             self.faiss_dict[key].save_local(
-                os.path.join(self.memory_folder, f"faiss_{key}"))
+                os.path.join(self.memory_folder, f"faiss_{key}")
+            )
 
     def get_memory(self, query: str, key_type: str):
         """Get the memory value for the key."""
         # Check if key_type is in keys
         if key_type not in self.keys:
-            raise ValueError(
-                f"Key type {key_type} not in keys {self.keys}.")
+            raise ValueError(f"Key type {key_type} not in keys {self.keys}.")
         # Get the key
         key_doc = self.faiss_dict[key_type].similarity_search(query, k=1)[0]
         key_id = key_doc.metadata["key_id"]
@@ -186,20 +189,21 @@ class MultiKeyMemory(object):
         """Return the key documents and value documents regarding the query."""
         # Check if key_type is in keys
         if key_type not in self.keys:
-            raise ValueError(
-                f"Key type {key_type} not in keys {self.keys}.")
+            raise ValueError(f"Key type {key_type} not in keys {self.keys}.")
         # Get the key documents
         key_docs = self.faiss_dict[key_type].similarity_search(query, k=k)
         # Get the corresponding value documents
-        value_docs = [self.value_dict[key.metadata["key_id"]]
-                      for key in key_docs]
+        value_docs = [self.value_dict[key.metadata["key_id"]] for key in key_docs]
         # Return both the key and value documents
         return key_docs, value_docs
 
 
 if __name__ == "__main__":
     memory_folder = "tests/memory/multi_key_memories"
-    mem = MultiKeyMemory(memory_folder, keys=["context", "observation"],
-                         load=False,
-                         embeddings=OpenAIEmbeddings())
+    mem = MultiKeyMemory(
+        memory_folder,
+        keys=["context", "observation"],
+        load=False,
+        embeddings=OpenAIEmbeddings(),
+    )
     mem.save_memory()

@@ -10,8 +10,6 @@ import surycate_bot_ls2716.utils as utils
 logger = utils.get_logger(__name__)
 
 
-
-
 def format_memories(memories: List) -> str:
     """Format the memories."""
     return "\n".join('- ' + memory for memory in memories)
@@ -19,7 +17,8 @@ def format_memories(memories: List) -> str:
 
 def format_similar_tasks(similar_tasks: List) -> str:
     """Format the similar tasks."""
-    return "\n----------------\n".join(similar_task for similar_task in similar_tasks)
+    return "\n----------------\n".join(
+        similar_task for similar_task in similar_tasks)
 
 
 def build_prompt(similar_tasks: list, execution: str) -> str:
@@ -29,6 +28,7 @@ def build_prompt(similar_tasks: list, execution: str) -> str:
         execution=execution
     )
     return prompt
+
 
 context_info_template_str = """Complete the next line in sequence using the following pattern:
 

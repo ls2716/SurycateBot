@@ -36,16 +36,17 @@ def test_time(state: Dict, action_executor: actions.ActionExecutor):
 
 @pytest.fixture(scope="module")
 def bash():
-    shell_obj = shell.PexpectShell(command_timeout=1.)
+    shell_obj = shell.PexpectShell(command_timeout=1.0)
     yield shell_obj
     shell_obj.close()
 
 
-def test_bash_command(state: Dict, bash: shell.PexpectShell,
-                      action_executor: actions.ActionExecutor):
+def test_bash_command(
+    state: Dict, bash: shell.PexpectShell, action_executor: actions.ActionExecutor
+):
     # Test successful bash command
-    action = 'cmd ls -la'
-    state['shell'] = bash
+    action = "cmd ls -la"
+    state["shell"] = bash
     observation, task_done = action_executor.execute(action, state)
 
     # Debugging statements

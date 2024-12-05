@@ -1,4 +1,5 @@
 """Implement shell and shell communication."""
+
 import time
 
 import pexpect  # type: ignore
@@ -49,11 +50,11 @@ class PexpectShell(object):
     retrieved.
     """
 
-    def __init__(self, command_timeout: float = 2.) -> None:
+    def __init__(self, command_timeout: float = 2.0) -> None:
         # Start the child process
-        self.child = pexpect.spawn('bash')
+        self.child = pexpect.spawn("bash")
         self.command_timeout = command_timeout
-        self.terminal_content = ['']
+        self.terminal_content = [""]
         # Initialise the terminal for rendering the output
         self.screen = pyte.Screen(150, 1)
         self.stream = pyte.ByteStream(self.screen)
@@ -79,8 +80,7 @@ class PexpectShell(object):
         if timeout is None:
             timeout = self.command_timeout
         # Expect a prompt or a timeout
-        i = self.child.expect(
-            [r'\w+\$', pexpect.TIMEOUT], timeout=timeout)
+        i = self.child.expect([r"\w+\$", pexpect.TIMEOUT], timeout=timeout)
         # Initialise output
         output = b""
         # If the prompt is returned decode both before and after
@@ -101,7 +101,7 @@ class PexpectShell(object):
         # For each line in the output
         # Feed the line to the stream, render the screen
         # and append the line to the output_lines
-        for line in output.split(b'\n'):
+        for line in output.split(b"\n"):
             self.stream.feed(line)
             output_lines.append(self.screen.display[0].rstrip())
             self.screen.reset()
@@ -111,24 +111,23 @@ class PexpectShell(object):
         # Compute the returned output by assembling the output lines
         returned_output_lines = [self.terminal_content[-1] + output_lines[0]]
         if len(output_lines) > 14:  # If the output is too long cut it
-            returned_output_lines += output_lines[1:5] + \
-                ['...'] + output_lines[-8:]
+            returned_output_lines += output_lines[1:5] + ["..."] + output_lines[-8:]
         else:
             returned_output_lines += output_lines[1:]
         # Append the output to the last line of terminal content
         # This will be returned as the output
-        returned_output = self.terminal_content[-1] + '\n'.join(output_lines)
+        returned_output = self.terminal_content[-1] + "\n".join(output_lines)
         # Append the first line to the last line
         self.terminal_content[-1] += output_lines[0]
         # Append the rest of the lines as elements
         self.terminal_content += output_lines[1:]
         # Assemble the output from the returned output lines
-        returned_output = '\n'.join(returned_output_lines)
+        returned_output = "\n".join(returned_output_lines)
         # Add a space at the end of the terminal content if it ends with a
         # prompt
-        if returned_output.endswith('$'):
-            self.terminal_content[-1] += ' '
-            returned_output += ' '
+        if returned_output.endswith("$"):
+            self.terminal_content[-1] += " "
+            returned_output += " "
         # If there are two many lines in the terminal content cut the middle
         # Return the output
         return returned_output
@@ -141,7 +140,7 @@ class PexpectShell(object):
         Returns:
         - str: The last n lines of the output.
         """
-        return '\n'.join(self.terminal_content[-n:]) if n > 0 else ''
+        return "\n".join(self.terminal_content[-n:]) if n > 0 else ""
 
     def close(self) -> None:
         """Close the shell."""

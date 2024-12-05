@@ -1,12 +1,13 @@
 """Declare the language model to be used by the bot."""
+
 import os
 
 from langchain_openai import ChatOpenAI  # type: ignore
 
 
-def get_llm(temperature: float = 0.7, max_tokens: int = 100,
-            model="gpt-4o-mini", **kwargs
-            ) -> ChatOpenAI:
+def get_llm(
+    temperature: float = 0.7, max_tokens: int = 100, model="gpt-4o-mini", **kwargs
+) -> ChatOpenAI:
     """Return the language model as chat model and bind \n as a stop token.
 
     Args:
@@ -23,9 +24,13 @@ def get_llm(temperature: float = 0.7, max_tokens: int = 100,
     the OpenAI API key.
     """
     # Get the language model
-    llm = ChatOpenAI(api_key=os.getenv("OPENAI_API_KEY"),
-                     temperature=temperature, max_tokens=max_tokens,
-                     model=model, **kwargs)
+    llm = ChatOpenAI(
+        api_key=os.getenv("OPENAI_API_KEY"),
+        temperature=temperature,
+        max_tokens=max_tokens,
+        model=model,
+        **kwargs,
+    )
     # Bind \n as a stop token
-    llm = llm.bind(stop=['\n'])
+    llm = llm.bind(stop=["\n"])
     return llm

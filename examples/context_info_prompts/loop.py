@@ -1,11 +1,12 @@
 """Execution of the bot"""
+
 import surycate_bot_ls2716.utils as utils
 import surycate_bot_ls2716.actions as actions
 import surycate_bot_ls2716.memory_faiss as memory_faiss
 from surycate_bot_ls2716.llm import get_llm
 from surycate_bot_ls2716.shell import PexpectShell
-from prompt_template import build_prompt, context_info_template
-from langchain_openai import OpenAIEmbeddings # type: ignore
+from prompt_template import build_prompt
+from langchain_openai import OpenAIEmbeddings  # type: ignore
 
 # Import the command line arguments utility argparse
 import argparse
@@ -20,6 +21,7 @@ def print_execution(execution):
     print(execution)
     print("@@@ End of current execution history @@@")
 
+
 def print_prompt(prompt):
     """Print the prompt."""
     print("@@@ Prompt @@@")
@@ -27,8 +29,14 @@ def print_prompt(prompt):
     print("@@@ End of prompt @@@")
 
 
-def loop(context, llm, knowledge: memory_faiss.MultiKeyMemory, experiences: memory_faiss.MultiKeyMemory,
-         actions, shell):
+def loop(
+    context,
+    llm,
+    knowledge: memory_faiss.MultiKeyMemory,
+    experiences: memory_faiss.MultiKeyMemory,
+    actions,
+    shell,
+):
     """Execute one task.
 
     The input to each loop is a context, a set of experiences, a set of actions, state and prompt template.
@@ -52,13 +60,11 @@ def loop(context, llm, knowledge: memory_faiss.MultiKeyMemory, experiences: memo
         _, context_info = knowledge.get_memories(execution, key_type="context")
         # STEP 2: Get the similar experiences from the experience memory based on context and information
         # First add the information to the execution
-        execution += "INFORMATION:\n" + \
-            "\n".join(f"- {info}" for info in context_info)
+        execution += "INFORMATION:\n" + "\n".join(f"- {info}" for info in context_info)
         print_execution(execution)
         # Get the similar experiences
-        _, similar_experiences = experiences.get_memories(
-            execution, key_type="context")
-        
+        _, similar_experiences = experiences.get_memories(execution, key_type="context")
+
         # STEP 3: Build the prompt and first get the action thought from LLM
         execution += "\nACTION THOUGHT:\n"
         prompt = build_prompt(similar_tasks=similar_experiences, execution=execution)
@@ -83,7 +89,9 @@ def loop(context, llm, knowledge: memory_faiss.MultiKeyMemory, experiences: memo
         input("Is the action ok? [y]")
 
         # STEP 5: Execute the action and receive the observation
-        observation, task_done = actions.execute(action_response, state={"shell": shell})
+        observation, task_done = actions.execute(
+            action_response, state={"shell": shell}
+        )
         execution += f"OBSERVATION:\n{observation}\n"
         print_execution(execution)
         input("Is the observation ok? [y]")
@@ -109,9 +117,6 @@ def loop(context, llm, knowledge: memory_faiss.MultiKeyMemory, experiences: memo
         execution += f"{new_context}\n"
         print_execution(execution)
         input("Is the new context ok? [y]")
-        
-
-
 
         exit(0)
     # Return the task
@@ -121,8 +126,9 @@ def loop(context, llm, knowledge: memory_faiss.MultiKeyMemory, experiences: memo
 if __name__ == "__main__":
     # Get the task name from the command line as well as the prompt type
     parser = argparse.ArgumentParser()
-    parser.add_argument("--task_name", type=str,
-                        help="The name of the task", required=True)
+    parser.add_argument(
+        "--task_name", type=str, help="The name of the task", required=True
+    )
     args = parser.parse_args()
     # Get the task name
     task_name = args.task_name
@@ -139,20 +145,30 @@ if __name__ == "__main__":
 
     # Set up the experiences memory
     experiences = memory_faiss.MultiKeyMemory(
-        'experiences', keys=["context", "observation"], embeddings=OpenAIEmbeddings(), load=False)
+        "experiences",
+        keys=["context", "observation"],
+        embeddings=OpenAIEmbeddings(),
+        load=False,
+    )
     logger.debug("Experiences set up")
 
     # Set up the knowledge memory
     knowledge = memory_faiss.MultiKeyMemory(
-        'memories', keys=["context"], embeddings=OpenAIEmbeddings(), load=False)
+        "memories", keys=["context"], embeddings=OpenAIEmbeddings(), load=False
+    )
 
     # Set up actions
     actions = actions.ActionExecutor(action_set=actions.DEFAULT_ACTION_SET)
-
 
     # Set up shell
     shell = PexpectShell()
 
     # Execute the task
-    loop(context=context, llm=llm, knowledge=knowledge,
-         experiences=experiences, actions=actions, shell=shell)
+    loop(
+        context=context,
+        llm=llm,
+        knowledge=knowledge,
+        experiences=experiences,
+        actions=actions,
+        shell=shell,
+    )
