@@ -173,7 +173,7 @@ class MultiKeyMemory(object):
                 f"Key type {key_type} not in keys {self.keys}.")
         # Get the key
         key_doc = self.faiss_dict[key_type].similarity_search(query, k=1)[0]
-        key_id = key_doc.metadata["key_id"]
+        key_id = key_doc.metadata["key_id"] #
         # Get the value
         value_doc = self.value_dict[key_id]
         return key_doc, value_doc
