@@ -83,7 +83,7 @@ OBSERVATION:
     # Create a memory folder and clear it
     try:
         shutil.rmtree("key_value_experiences")
-    except:
+    except FileNotFoundError:
         pass
     os.makedirs("key_value_experiences")
     os.makedirs("key_value_experiences/keys_context")
