@@ -49,14 +49,14 @@ def loop(context, llm, knowledge: memory_faiss.MultiKeyMemory, experiences: memo
 
     while True:
         # STEP 1: Get the information regarding the context from the knowledge memory
-        _, context_info = knowledge.get_memories(execution, key_type="context")
+        _, _, context_info = knowledge.get_memories(execution, key_type="context")
         # STEP 2: Get the similar experiences from the experience memory based on context and information
         # First add the information to the execution
         execution += "INFORMATION:\n" + \
             "\n".join(f"- {info}" for info in context_info)
         print_execution(execution)
         # Get the similar experiences
-        _, similar_experiences = experiences.get_memories(
+        _, _, similar_experiences = experiences.get_memories(
             execution, key_type="context")
         
         # STEP 3: Build the prompt and first get the action thought from LLM
@@ -110,10 +110,7 @@ def loop(context, llm, knowledge: memory_faiss.MultiKeyMemory, experiences: memo
         print_execution(execution)
         input("Is the new context ok? [y]")
         
-
-
-
-        exit(0)
+        # exit(0)
     # Return the task
     return context
 
