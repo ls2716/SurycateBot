@@ -15,7 +15,7 @@ import os
 from pathlib import Path
 from typing import List
 
-import yaml, json
+import  json
 from langchain_community.document_loaders import DirectoryLoader, TextLoader
 from langchain_community.vectorstores import FAISS
 from langchain_openai import OpenAIEmbeddings  # type: ignore
@@ -147,7 +147,7 @@ class MultiKeyMemory(object):
         # Load the value dictionary from json
         data_dict_path = os.path.join(self.memory_folder, "memory_dict.json")
         with open(data_dict_path, "r") as f:
-            data_dict = yaml.safe_load(f)
+            data_dict = json.load(f)
         self.value_dict = data_dict["value_dict"]
         self.key_doc_dict = data_dict["key_doc_dict"]
 
