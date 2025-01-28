@@ -92,7 +92,6 @@ class MultiKeyMemory(object):
         # Get the filenames in the memory folder
         filenames = os.listdir(key_folders[0])
         # The filenames are of the form memory_<number>.md
-
         # Load the keys
         self.key_doc_dict = {}
         # For each key, create a FAISS index

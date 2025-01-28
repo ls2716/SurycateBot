@@ -1,9 +1,11 @@
 """Implement actions for the bot."""
+
 import shlex  # For splitting the command into a list of arguments
 from datetime import datetime
 from typing import Callable, Dict, List, Tuple
 
 import surycate_bot_ls2716.shell as shell_lib
+
 # Import the logging module
 import surycate_bot_ls2716.utils as utils
 
@@ -12,12 +14,11 @@ logger = utils.get_logger(__name__)
 
 
 def execute_shell_command(state, arguments) -> str:
-    """Execute a shell command using the shell in the state.
-    """
+    """Execute a shell command using the shell in the state."""
     # Get the command
     command = " ".join(arguments)
     # Get the shell object
-    shell = state['shell']
+    shell = state["shell"]
     if type(shell) is not shell_lib.PexpectShell:
         raise TypeError("Shell object in the state is not of type Shell.")
 
@@ -37,7 +38,7 @@ def execute_shell_command(state, arguments) -> str:
 def get_time(state: Dict, arguments: List[str]) -> Tuple[str, bool]:
     """Get the current time action."""
     # Get the current time
-    current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     # Return the time and the task_done flag set to False
     return "Current time is: " + current_time, False
 
@@ -63,7 +64,7 @@ DEFAULT_ACTION_SET = {
     "exit": task_done,
     "cmd": execute_shell_command,
     "tell": tell,
-    'no_action': lambda state, arguments: ("None", False)
+    "no_action": lambda state, arguments: ("None", False),
 }
 
 
@@ -112,9 +113,7 @@ if __name__ == "__main__":
     # Initialise the shell
     shell = shell_lib.PexpectShell()
     # Set the state
-    state = {
-        "shell": shell
-    }
+    state = {"shell": shell}
     # Set up the ActionExecutor
     actions = ActionExecutor(DEFAULT_ACTION_SET)
     # Execute the command
