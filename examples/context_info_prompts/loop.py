@@ -97,6 +97,10 @@ def loop(
         print_execution(execution)
         input("Is the observation ok? [y]")
 
+        if task_done:
+            logger.debug("Task is done, exiting the loop")
+            break
+
         # STEP 6: Get the thought regarding the action form LLM
         execution += "OBSERVATION THOUGHT:\n"
         prompt = build_prompt(similar_tasks=similar_experiences, execution=execution)
@@ -119,7 +123,6 @@ def loop(
         print_execution(execution)
         input("Is the new context ok? [y]")
         
-        # exit(0)
     # Return the task
     return context
 

@@ -44,12 +44,12 @@ def main():
 
     # Create a memory folder and clear it
     try:
-        shutil.rmtree('key_value_memories')
+        shutil.rmtree('../memories')
     except Exception:
         pass
-    os.makedirs('key_value_memories')
-    os.makedirs('key_value_memories/keys_context')
-    os.makedirs('key_value_memories/values')
+    os.makedirs('../memories')
+    os.makedirs('../memories/keys_context')
+    os.makedirs('../memories/values')
 
 
     # Iterate through all memories and create key files
@@ -59,9 +59,9 @@ def main():
         key_context = format_memory(memory, template=context_template)
         value = format_memory(memory, template=value_template)
         index = str(i).zfill(4)
-        with open(f'key_value_memories/keys_context/mem_{index}.md', 'w+') as f:
+        with open(f'../memories/keys_context/mem_{index}.md', 'w+') as f:
             f.write(key_context)
-        with open(f'key_value_memories/values/mem_{index}.md', 'w+') as f:
+        with open(f'../memories/values/mem_{index}.md', 'w+') as f:
             f.write(value)
         print(f'Done')
 

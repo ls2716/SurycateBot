@@ -1,1 +1,0 @@
-I am working on a project to create a website. I have just created a REAMDME.md file in the "WebsitePersonal" folder. I want to write the description of the website in the README.md file. I am currently in the "WebsitePersonal" folder which also contains the REAMDME.md file.

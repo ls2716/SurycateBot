@@ -1,1 +1,0 @@
-I am working on a project to create a website. I have to create a folder for the project in the Projects directory. I want to create a folder named "WebsitePersonal" but I am not sure whether I am in the Projects directory. I need to change directory to the Projects directory. I know that it is in the home directory.

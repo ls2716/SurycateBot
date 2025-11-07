@@ -83,13 +83,13 @@ OBSERVATION:
 
     # Create a memory folder and clear it
     try:
-        shutil.rmtree('key_value_experiences')
+        shutil.rmtree('../experiences')
     except:
         pass
-    os.makedirs('key_value_experiences')
-    os.makedirs('key_value_experiences/keys_context')
-    os.makedirs('key_value_experiences/keys_observation')
-    os.makedirs('key_value_experiences/values')
+    os.makedirs('../experiences')
+    os.makedirs('../experiences/keys_context')
+    os.makedirs('../experiences/keys_observation')
+    os.makedirs('../experiences/values')
 
 
     # Iterate through all memories and create key files
@@ -100,11 +100,11 @@ OBSERVATION:
         key_observation = format_memory(memory, template=observation_template)
         value = format_memory(memory, template=value_template)
         index = str(i).zfill(4)
-        with open(f'key_value_experiences/keys_context/mem_{index}.md', 'w+') as f:
+        with open(f'../experiences/keys_context/mem_{index}.md', 'w+') as f:
             f.write(key_context)
-        with open(f'key_value_experiences/keys_observation/mem_{index}.md', 'w+') as f:
+        with open(f'../experiences/keys_observation/mem_{index}.md', 'w+') as f:
             f.write(key_observation)
-        with open(f'key_value_experiences/values/mem_{index}.md', 'w+') as f:
+        with open(f'../experiences/values/mem_{index}.md', 'w+') as f:
             f.write(value)
         print(f'Done')
 
